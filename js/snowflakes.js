@@ -50,7 +50,7 @@ function spawnSnowflake() {
     flake.size = Math.random() * range + minSize;
     flake.x = Math.random() * windowWidth;
     flake.y = -flake.size / 2;
-    let ct = Math.random() * 15;
+    let ct = Math.random() * 10 + 5;
     for (let i = 0; i < ct; i++) {
         addPoint(flake);
     }
@@ -67,7 +67,7 @@ function addPoint(flake) {
         pt.x = pt2.x;
         pt.y = pt2.y;
     }
-    if (Math.random() < 0.8) { //connect to existing point
+    if (Math.pow(Math.random(), 3) < -pt.y / (flake.size / 2)) { //connect to existing point
         let other = {x: pt.x, y: pt.y};
         if (flake.pts.length < 2) {
             other.x = 0;
