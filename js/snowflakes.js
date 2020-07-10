@@ -6,7 +6,6 @@ const ySpeed = 0.3;
 const parallax = 0.5;
 
 let flakes = [];
-let ct = 0;
 
 function setup() {
     let cnv = createCanvas(windowWidth, windowHeight);
@@ -15,10 +14,13 @@ function setup() {
     noFill();
     strokeWeight(5);
     stroke(255);
+    strokeCap(SQUARE);
+    strokeJoin(MITER);
+    noSmooth();
 }
 
 function draw() {
-    if (ct % 45 === 0) {
+    if (frameCount % 45 === 0) {
         spawnSnowflake();
     }
     background(100, 190, 255);
@@ -37,7 +39,6 @@ function draw() {
     for (let i = 0; i < removed.length; i++) {
         flakes.splice(removed[i], 1);
     }
-    ct++;
 }
 
 function mouseClicked() {
