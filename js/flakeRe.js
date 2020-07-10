@@ -1,9 +1,9 @@
 const sym = 6;
 const minSize = 100;
 const range = 200;
-const xSpeed = 0.03;
-const ySpeed = 0.3;
-const parallax = 0.5;
+const xSpeed = 0.01;
+const ySpeed = 0.1;
+const parallax = 0.6;
 
 let flakes = [];
 
@@ -11,24 +11,17 @@ function setup() {
     let cnv = createCanvas(windowWidth, windowHeight);
     cnv.position(0, 0);
     textSize(30);
-    noFill();
-    strokeWeight(5);
-    stroke(255);
-    strokeCap(SQUARE);
-    strokeJoin(MITER);
-    noSmooth();
 }
 
 function draw() {
-    if (frameCount % 5 === 0) {
+    background(100, 190, 255);
+    if (frameCount % 45 === 0) {
         spawnSnowflake();
     }
-    background(100, 190, 255);
     let removed = [];
     for (let i = 0; i < flakes.length; i++) {
         push();
-        translate(flakes[i].x, flakes[i].y);
-        showSnowflake(flakes[i]);
+        image(flakes[i].graphics, flakes[i].x, flakes[i].y);
         pop();
         flakes[i].x += xSpeed * Math.pow(flakes[i].size, parallax);
         flakes[i].y += ySpeed * Math.pow(flakes[i].size, parallax);
@@ -37,6 +30,7 @@ function draw() {
         }
     }
     for (let i = 0; i < removed.length; i++) {
+        flakes[removed[i]].graphics.remove();
         flakes.splice(removed[i], 1);
     }
 }
@@ -49,11 +43,23 @@ function spawnSnowflake() {
     let flake = {pts: []};
     flake.size = Math.random() * range + minSize;
     flake.x = Math.random() * windowWidth;
-    flake.y = -flake.size / 2;
+    flake.y = -flake.size;
+    flake.graphics = createGraphics(flake.size, flake.size);
+    flake.graphics.clear();
     let ct = Math.random() * 10 + 5;
     for (let i = 0; i < ct; i++) {
         addPoint(flake);
     }
+
+    flake.graphics.noFill();
+    flake.graphics.strokeWeight(5);
+    flake.graphics.stroke(255);
+    flake.graphics.strokeCap(SQUARE);
+    flake.graphics.strokeJoin(MITER);
+    flake.graphics.noSmooth();
+    flake.graphics.translate(flake.size / 2, flake.size / 2);
+    showSnowflake(flake);
+
     flakes.push(flake);
 }
 
@@ -86,36 +92,37 @@ function addPoint(flake) {
 }
 
 function showSnowflake(flake) {
-    strokeWeight(flake.size / 80);
+    let graphics = flake.graphics;
+    graphics.strokeWeight(flake.size / 80);
     let a = flake.size / range;
     let alpha = a.toString();
-    stroke('rgba(255,255,255,' + alpha+')');
+    graphics.stroke('rgba(255,255,255,' + alpha+')');
     flake.pts.forEach(function(pt) {
         if (!pt.ring) {
             for (let i = 0; i < sym; i++) {
-                beginShape();
-                vertex(pt.x, pt.y);
-                vertex(pt.other.x, pt.other.y);
-                endShape();
+                graphics.beginShape();
+                graphics.vertex(pt.x, pt.y);
+                graphics.vertex(pt.other.x, pt.other.y);
+                graphics.endShape();
 
-                beginShape();
-                vertex(-pt.x, pt.y);
-                vertex(-pt.other.x, pt.other.y);
-                endShape();
+                graphics.beginShape();
+                graphics.vertex(-pt.x, pt.y);
+                graphics.vertex(-pt.other.x, pt.other.y);
+                graphics.endShape();
 
-                rotate(2 * Math.PI / sym);
+                graphics.rotate(2 * Math.PI / sym);
             }
         } else {
-            beginShape();
+            graphics.beginShape();
             let other = {x: -pt.x, y: pt.y};
             for (let i = 0; i < sym; i++) {
-                vertex(other.x, other.y);
-                vertex(pt.x, pt.y);
+                graphics.vertex(other.x, other.y);
+                graphics.vertex(pt.x, pt.y);
                 originRotation(other, 2 * Math.PI / sym);
                 originRotation(pt, 2 * Math.PI / sym);
             }
-            vertex(other.x, other.y);
-            endShape();
+            graphics.vertex(other.x, other.y);
+            graphics.endShape();
         }
     });
 }
