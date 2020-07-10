@@ -1,5 +1,3 @@
-const screenWidth = 1600;
-const screenHeight = 900;
 const sym = 6;
 const minSize = 100;
 const range = 200;
@@ -11,7 +9,8 @@ let flakes = [];
 let ct = 0;
 
 function setup() {
-    createCanvas(displayWidth, displayHeight);
+    let cnv = createCanvas(windowWidth, windowHeight);
+    cnv.position(0, 0);
     textSize(30);
     noFill();
     strokeWeight(5);
@@ -31,7 +30,7 @@ function draw() {
         pop();
         flakes[i].x += xSpeed * Math.pow(flakes[i].size, parallax);
         flakes[i].y += ySpeed * Math.pow(flakes[i].size, parallax);
-        if (flakes[i].y > screenHeight + flakes[i].size / 2) {
+        if (flakes[i].y > windowHeight + flakes[i].size / 2) {
             removed.push(i);
         }
     }
@@ -48,7 +47,7 @@ function mouseClicked() {
 function spawnSnowflake() {
     let flake = {pts: []};
     flake.size = Math.random() * range + minSize;
-    flake.x = Math.random() * screenWidth;
+    flake.x = Math.random() * windowWidth;
     flake.y = -flake.size / 2;
     let ct = Math.random() * 15;
     for (let i = 0; i < ct; i++) {
