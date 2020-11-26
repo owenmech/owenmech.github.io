@@ -1,5 +1,5 @@
-const gridSize = 20;
-const tileSize = 40;
+const GRID_SIZE = 20;
+let tileSize = 40;
 let weight = 20;
 let grid = [];
 let corners = [];
@@ -21,7 +21,10 @@ const Dir = {
 let curCol = 0;
 
 function setup() {
-    createCanvas((gridSize + 2) * tileSize, (gridSize + 2) * tileSize);
+    let size = Math.min(windowWidth, windowHeight);
+    let cnv = createCanvas(size - 20, size - 20);
+    cnv.position(10, 10);
+    tileSize = width / GRID_SIZE;
     background(255);
     noFill();
     strokeWeight(weight);
@@ -29,10 +32,10 @@ function setup() {
 
     grid = [];
     corners = [];
-    for (let i = 0; i < gridSize; i++) {
+    for (let i = 0; i < GRID_SIZE; i++) {
         grid.push([]);
         corners.push([]);
-        for (let j = 0; j < gridSize; j++) {
+        for (let j = 0; j < GRID_SIZE; j++) {
             grid[i].push(false);
             corners[i].push(false);
         }
@@ -88,6 +91,7 @@ function createLine() {
     for (let i = 0; i < len; i++) {
         // translate(directions[i].x * tileSize, directions[i].y * tileSize);
         // station(false);
+        if (grid[x] === undefined || grid[x][y] === undefined) break;
         if (grid[x][y] !== false) {
             if (!parallel(directions[i], grid[x][y])) {
                 directions.push(directions[i]);
@@ -107,7 +111,7 @@ function createLine() {
         }
         x += directions[i + 1].x;
         y += directions[i + 1].y;
-        if (x >= gridSize || x < 0 || y >= gridSize || y < 0) {
+        if (x >= GRID_SIZE || x < 0 || y >= GRID_SIZE || y < 0) {
             directions.pop();
             break;
         } else {
@@ -180,19 +184,19 @@ function station(transfer) {
 }
 
 function outerPosition() {
-    let p = Math.floor(Math.pow(random(Math.pow(gridSize, 1 / outerDegree)), outerDegree));
+    let p = Math.floor(Math.pow(random(Math.pow(GRID_SIZE, 1 / outerDegree)), outerDegree));
     if (random() > 0.5) {
-        p = gridSize - p - 1;
+        p = GRID_SIZE - p - 1;
     }
     return p;
 }
 
 function startDirection(x, y) {
-    let dx = x - (gridSize / 2);
-    let dy = y - (gridSize / 2);
+    let dx = x - (GRID_SIZE / 2);
+    let dy = y - (GRID_SIZE / 2);
 
-    let horiz = random(gridSize / 2) < Math.abs(dx);
-    let vert = random(gridSize / 2) < Math.abs(dy);
+    let horiz = random(GRID_SIZE / 2) < Math.abs(dx);
+    let vert = random(GRID_SIZE / 2) < Math.abs(dy);
 
     if (horiz && vert) {
         if (dx > 0) {
