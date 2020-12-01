@@ -85,7 +85,9 @@ function mouseClicked() {
         r1: radius,
         r2: radius / 2,
         velX: Math.cos(dir) * vel,
-        velY: Math.sin(dir) * vel
+        velY: Math.sin(dir) * vel,
+        rot: Math.random() * 2 * PI,
+        velR: Math.random() * 0.04 - 0.02
     });
 }
 
@@ -101,7 +103,7 @@ function present(star) {
     let angle = 2 * PI / 5;
     let halfAngle = angle / 2.0;
     beginShape();
-    for (let a = 0; a < 2 * PI; a += angle) {
+    for (let a = star.rot; a < 2 * PI + star.rot; a += angle) {
         let sx = star.x + Math.cos(a) * star.r2;
         let sy = star.y + Math.sin(a) * star.r2;
         vertex(sx, sy);
@@ -119,6 +121,7 @@ function present(star) {
     if (star.y < 0 || star.y >= height) {
         star.velY *= -1;
     }
+    star.rot += star.velR;
 }
 
 function myHSVtoRGB(h, s, v) {
