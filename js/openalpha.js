@@ -8,7 +8,11 @@ let left = true;
 function setup() {
     let cnv;
     if (windowWidth < 2 * windowHeight) {
-        cnv = createCanvas(windowWidth - 20, windowWidth / 2 - 20);
+        let w = windowWidth;
+        if (windowWidth % 2 == 1) {
+            w -= 1;
+        }
+        cnv = createCanvas(w - 20, w / 2 - 20);
     } else {
         cnv = createCanvas(windowHeight * 2 - 20, windowHeight - 20);
     }
@@ -16,7 +20,7 @@ function setup() {
     pixelDensity(1);
     noSmooth();
     fill(255);
-    strokeWeight(25);
+    strokeWeight(.012 * width);
     background(30);
     for (let x = 0; x < width / 2; x++) {
         for (let y = 0; y < height; y++) {
@@ -89,16 +93,16 @@ function draw() {
 
 function mouseClicked() {
     if (mouseX <= width / 2 || mouseX >= width || mouseY < 0 || mouseY >= height) return;
-    let radius = Math.random() * 40 + 50;
-    let vel = Math.random() * 3 + 1;
+    let radius = Math.random() * 0.025 + 0.025;
+    let vel = Math.random() * 0.002 + 0.0003;
     let dir = Math.random() * 2 * PI;
     shapes.push({
         left: left,
         x: mouseX,
         y: mouseY,
-        r1: radius,
-        velX: Math.cos(dir) * vel,
-        velY: Math.sin(dir) * vel,
+        r1: radius * width,
+        velX: Math.cos(dir) * vel * width,
+        velY: Math.sin(dir) * vel * width,
         rot: Math.random() * 2 * PI,
         velR: Math.random() * 0.04 - 0.02
     });
@@ -115,6 +119,7 @@ function present(shape) {
 
     fill(0, 0, 0, 0);
     stroke(16, 200, 255, 16);
+    strokeWeight(0.4 * shape.r1);
     if (shape.left) { // circle
         circle(shape.x, shape.y, shape.r1 * 2);
     } else { // triangle
