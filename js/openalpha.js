@@ -93,6 +93,7 @@ function draw() {
 }
 
 function mouseClicked() {
+    if (mouseX <= width / 2) return;
     let radius = Math.random() * 40 + 50;
     let vel = Math.random() * 3 + 1;
     let dir = Math.random() * 2 * PI;
