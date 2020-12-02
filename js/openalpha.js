@@ -12,9 +12,9 @@ function setup() {
         if (windowWidth % 2 == 1) {
             w -= 1;
         }
-        cnv = createCanvas(w - 20, w / 2 - 20);
+        cnv = createCanvas(w - 20, w / 2 - 10);
     } else {
-        cnv = createCanvas(windowHeight * 2 - 20, windowHeight - 20);
+        cnv = createCanvas(windowHeight * 2 - 40, windowHeight - 20);
     }
     cnv.position(10, 10);
     pixelDensity(1);
@@ -56,8 +56,8 @@ function draw() {
             let pix = (x + y * width) * 4;
             if (pixels[pix] % 2 == 0) {
                 pixels[pix + 0] = 0;
-                pixels[pix + 1] = 30;
-                pixels[pix + 2] = 80;
+                pixels[pix + 1] = 20;
+                pixels[pix + 2] = 60;
                 pixels[pix + 3] = 255;
             } else {
                 pixels[pix + 0] = 0;

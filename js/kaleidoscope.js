@@ -10,9 +10,9 @@ function setup() {
         if (windowWidth % 2 == 1) {
             w -= 1;
         }
-        cnv = createCanvas(w - 20, w / 2 - 20);
+        cnv = createCanvas(w - 20, w / 2 - 10);
     } else {
-        cnv = createCanvas(windowHeight * 2 - 20, windowHeight - 20);
+        cnv = createCanvas(windowHeight * 2 - 40, windowHeight - 20);
     }
     cnv.position(10, 10);
     pixelDensity(1);
