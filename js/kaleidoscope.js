@@ -5,13 +5,14 @@ let indices = [];
 
 function setup() {
     let cnv;
-    if (windowWidth < 2 * windowHeight)
-    {
-        cnv = createCanvas(windowWidth - 20, windowWidth / 2 - 20);
-    }
-    else
-    {
-        cnv = createCanvas(windowHeight * 2 - 20, windowWidth - 20);
+    if (windowWidth < 2 * windowHeight) {
+        let w = windowWidth;
+        if (windowWidth % 2 == 1) {
+            w -= 1;
+        }
+        cnv = createCanvas(w - 20, w / 2 - 20);
+    } else {
+        cnv = createCanvas(windowHeight * 2 - 20, windowHeight - 20);
     }
     cnv.position(10, 10);
     pixelDensity(1);
@@ -76,17 +77,17 @@ function draw() {
 function mouseClicked() {
     if (mouseX <= width / 2 || mouseX >= width || mouseY < 0 || mouseY >= height) return;
     let col = myHSVtoRGB(Math.random(), 1, 1);
-    let radius = Math.random() * 120 + 60;
-    let vel = Math.random() * 3 + 1;
+    let radius = Math.random() * 0.025 + 0.06;
+    let vel = Math.random() * 0.002 + 0.0003;
     let dir = Math.random() * 2 * PI;
     stars.push({
         x: mouseX,
         y: mouseY,
         col: col,
-        r1: radius,
-        r2: radius / 2,
-        velX: Math.cos(dir) * vel,
-        velY: Math.sin(dir) * vel,
+        r1: radius * width,
+        r2: radius / 2 * width,
+        velX: Math.cos(dir) * vel * width,
+        velY: Math.sin(dir) * vel * width,
         rot: Math.random() * 2 * PI,
         velR: Math.random() * 0.04 - 0.02
     });
@@ -101,6 +102,7 @@ function doStars() {
 function present(star) {
     fill(star.col.r, star.col.g, star.col.b, 100);
     stroke(star.col.r, star.col.g, star.col.b, 255);
+    strokeWeight(0.1 * star.r1);
     let angle = 2 * PI / 5;
     let halfAngle = angle / 2.0;
     beginShape();
