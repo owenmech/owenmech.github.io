@@ -42,23 +42,12 @@ function setup() {
 }
 
 function draw() {
-    // background(30, 50, 90, 255);
     background(0, 20, 60, 255);
-    loadPixels();
-    for (let x = 0; x < width / 2; x++) {
-        for (let y = 0; y < height; y++) {
-            let pix = indices[x + y * height] * 4;
-            pixels[pix + 0] = 0;
-            pixels[pix + 1] = 30;
-            pixels[pix + 2] = 80;
-            pixels[pix + 3] = 255;
-        }
-    }
-    updatePixels();
 
     doShapes();
     loadPixels();
-    for (let x = width / 2; x < width; x++) {
+    // boolean logic
+    for (let x = width / 2 + 1; x < width; x++) {
         for (let y = 0; y < height; y++) {
             let pix = (x + y * width) * 4;
             if (pixels[pix] % 2 == 0) {
@@ -74,10 +63,7 @@ function draw() {
             }
         }
     }
-    updatePixels();
-
-    loadPixels();
-//        antiLines();
+    // copy over
     for (let x = 0; x < width / 2; x++) {
         for (let y = 0; y < height; y++) {
             let ind = indices[x + y * height] * 4;
@@ -86,7 +72,16 @@ function draw() {
             pixels[pix + 1] = pixels[ind + 1];
             pixels[pix + 2] = pixels[ind + 2];
             pixels[pix + 3] = pixels[ind + 3];
-//                pixels[x + y * width] = color((hue(col) + frameCount) % 255, saturation(col), brightness(col) * 2);
+        }
+    }
+    // black divider
+    for (let x = width / 2; x <= width / 2 + 1; x++) {
+        for (let y = 0; y < height; y++) {
+            let pix = (x + y * width) * 4;
+            pixels[pix + 0] = 0;
+            pixels[pix + 1] = 0;
+            pixels[pix + 2] = 0;
+            pixels[pix + 3] = 0;
         }
     }
     updatePixels();
