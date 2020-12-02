@@ -74,7 +74,7 @@ function draw() {
 }
 
 function mouseClicked() {
-    if (mouseX <= width / 2) return;
+    if (mouseX <= width / 2 || mouseX >= width || mouseY < 0 || mouseY >= height) return;
     let col = myHSVtoRGB(Math.random(), 1, 1);
     let radius = Math.random() * 120 + 60;
     let vel = Math.random() * 3 + 1;
