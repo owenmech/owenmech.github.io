@@ -208,8 +208,10 @@ function drawIsolated(idx, idx2 = -1) {
     let word = lyrics[idx];
 
     if (pBefore) drawGrid(word);
-    drawLines(idx);
-    if (idx2 > -1) drawLines(idx2);
+    if (pOpacity > 0 || pSkew > 0) {
+        drawLines(idx);
+        if (idx2 > -1) drawLines(idx2);
+    }
     if (pAfter) drawGrid(word);
 
     for (let i = 0; i < lyrics.length; i++) {
@@ -507,7 +509,7 @@ let presets = [
     },
     {
         b: true,
-        a: true,
+        a: false,
         o: 0,
         s: 0,
         l: "1\n" +
