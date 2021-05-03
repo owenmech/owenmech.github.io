@@ -1,13 +1,18 @@
+let cnv;
+let finished;
 let GRID_SIZE = 6;
+const KEY_SIZE = 40;
 let rawLyrics = "";
 let lyrics = "";
 let indexData = new Map();
 let orderData = new Map();
 let curWord = -1;
-let cnv;
+let hoverWord = -1;
 let maxFreq = 0;
 let waiting = true;
 let optionsOpen = false;
+let animating = false;
+let hovering = false;
 
 let pBefore = true;
 let pAfter = true;
@@ -19,7 +24,7 @@ function setup() {
     noLoop();
 }
 
-// HOVER INFO
+// TODO: HOVER INFO
 
 function generate() {
     pBefore = document.getElementById("beforeBool").checked;
@@ -49,21 +54,18 @@ function toggleOptions() {
 function uiSetup() {
     let fullSize = min(windowWidth, windowHeight) - 40;
     cnv = createCanvas(fullSize, fullSize);
-    if (fullSize > 3 / 4 * windowWidth) {
-        cnv.position((windowWidth - fullSize) / 2, fullSize / 2);
-    } else {
-        cnv.position(windowWidth - fullSize - 20, 20);
-    }
     cnv.parent("canvDiv");
-
     let inputParent = document.getElementById("lyricParent");
     let space = document.getElementById("extraSpace");
+
     if (fullSize > 3 / 4 * windowWidth) { // SKINNY
+        cnv.position((windowWidth - fullSize) / 2, fullSize / 2);
         inputParent.style.width = (windowWidth - 40).toString() + "px";
         inputParent.style.height = (fullSize / 2 - 100).toString() + "px";
         space.style.top = (fullSize * 1.5).toString() + "px";
         space.style.display = "block";
     } else {
+        cnv.position(windowWidth - fullSize - 20, 20);
         inputParent.style.width = (windowWidth - fullSize - 100).toString() + "px";
         inputParent.style.height = (windowHeight - 100).toString() + "px";
         space.style.display = "none";
@@ -101,56 +103,120 @@ function lyricSetup() {
         orderData.set(alpha[i], i);
     }
 
-    GRID_SIZE = width / lyrics.length;
+    GRID_SIZE = (width - KEY_SIZE) / (lyrics.length);
 
     colorMode(HSB, orderData.size, 1, 1);
     pixelDensity(5);
+    frameRate(60);
+    textSize(KEY_SIZE / 2);
     background(0);
+    push();
+    translate(KEY_SIZE, KEY_SIZE);
     if (pBefore) drawGrid();
-    curWord = -3;
+    curWord = -2;
+    animating = true;
     loop();
 }
 
 function draw() {
+    translate(KEY_SIZE, KEY_SIZE);
     if (rawLyrics.length === 0) return;
-    curWord++;
-    if (curWord >= lyrics.length) {
-        noLoop();
-        curWord = -1;
+
+    if (curWord < lyrics.length) // animating
+    {
+        if (curWord >= 0) {
+            drawLines(curWord);
+            drawKey(curWord, true);
+        }
+    } else if (animating) { // final frame
         if (pAfter) drawGrid();
-    } else {
-        drawLines();
+        animating = false;
+        finished = createGraphics(width, height);
+        finished.pixelDensity(5);
+        finished.copy(cnv, 0, 0, width, height, 0, 0, width, height);
+    } else { // hover time
+        checkHover();
     }
+    curWord++;
 }
 
-function drawGrid() {
+function drawGrid(isolate = "") {
+    let limit = false;
+    if (isolate.length > 0) limit = true;
+    strokeWeight(GRID_SIZE / 6);
     const iterator = indexData[Symbol.iterator]();
     for (let pair of iterator) {
         let coords = pair[1];
-        strokeWeight(GRID_SIZE / 6);
         stroke(orderData.get(pair[0]), 0.3, 0, 1);
-        fill(orderData.get(pair[0]), 0.95, 1);
+        fill(orderData.get(pair[0]), 0.9, limit && isolate !== pair[0] ? 0.2 : 1);
         for (let i = 0; i < coords.length; i++) {
             for (let j = 0; j < coords.length; j++) {
                 circle((coords[i] + .5) * GRID_SIZE, (coords[j] + .5) * GRID_SIZE, GRID_SIZE);
             }
         }
     }
-    strokeWeight(2);
-    stroke(255);
-    fill(255);
 }
 
-function drawLines() {
-    if (curWord < 0) return;
-    let coords = indexData.get(lyrics[curWord]);
+function drawLines(word) {
+    if (word < 0) return;
+    let coords = indexData.get(lyrics[word]);
     strokeWeight(GRID_SIZE / 2);
-    stroke(orderData.get(lyrics[curWord]), 1, 1, pSkew * (1 - coords.length / maxFreq) + pOpacity); // alpha should be constant
+    stroke(orderData.get(lyrics[word]), 0.9, 1, pSkew * (1 - coords.length / maxFreq) + pOpacity); // alpha should be constant
     for (let i = 0; i < coords.length; i++) {
         for (let j = 0; j < coords.length; j++) {
-            line((coords[i] + .5) * GRID_SIZE, (coords[j] + .5) * GRID_SIZE, (curWord + .5) * GRID_SIZE, (curWord + .5) * GRID_SIZE);
+            line((coords[i] + .5) * GRID_SIZE, (coords[j] + .5) * GRID_SIZE, (word + .5) * GRID_SIZE, (word + .5) * GRID_SIZE);
         }
     }
+}
+
+function drawKey(idx, on) {
+    strokeWeight(0);
+    fill(orderData.get(lyrics[idx]), 0.9, on ? 1 : 0.2, 1);
+    rect(-KEY_SIZE, idx * GRID_SIZE + GRID_SIZE * 0.05, 10, GRID_SIZE * 0.9); // left
+    rect(idx * GRID_SIZE + GRID_SIZE * 0.05, -KEY_SIZE, GRID_SIZE * 0.9, 10); // top
+}
+
+function checkHover() {
+    let idx = -1;
+    let mX = mouseX - GRID_SIZE / 2;
+    let mY = mouseY - GRID_SIZE / 2;
+    let xCoord = round((mX - KEY_SIZE) / (width - KEY_SIZE) * lyrics.length);
+    let yCoord = round((mY - KEY_SIZE) / (height - KEY_SIZE) * lyrics.length);
+    if (mouseX <= 10 && mouseX >= 0 && mouseY >= KEY_SIZE) {
+        idx = yCoord;
+    } else if (mouseY <= 10 && mouseY >= 0 && mouseX >= KEY_SIZE) {
+        idx = xCoord;
+    }
+
+    if (idx > -1 && idx < lyrics.length) {
+        hovering = true;
+        drawIsolated(idx);
+    } else if (xCoord < lyrics.length && yCoord < lyrics.length
+        && xCoord > -1 && yCoord > -1
+        && lyrics[xCoord] === lyrics[yCoord]) {
+        hovering = true;
+        drawIsolated(xCoord, yCoord);
+    } else if (hovering) {
+        copy(finished, 0, 0, width, height, -KEY_SIZE, -KEY_SIZE, width, height);
+        hovering = false;
+    }
+}
+
+function drawIsolated(idx, idx2 = -1) {
+    background(0);
+    let word = lyrics[idx];
+
+    if (pBefore) drawGrid(word);
+    drawLines(idx);
+    if (idx2 > -1) drawLines(idx2);
+    if (pAfter) drawGrid(word);
+
+    for (let i = 0; i < lyrics.length; i++) {
+        drawKey(i, lyrics[i] === word);
+    }
+    fill(255);
+    strokeWeight(0);
+    text(word, -KEY_SIZE, -10);
 }
 
 function mouseClicked() {
