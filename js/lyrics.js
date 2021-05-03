@@ -1,4 +1,5 @@
 let GRID_SIZE = 6;
+let rawLyrics = "";
 let lyrics = "";
 let indexData = new Map();
 let orderData = new Map();
@@ -7,6 +8,7 @@ let cnv;
 let maxFreq = 0;
 let waiting = true;
 let optionsOpen = false;
+let applying = 0;
 
 let pBefore = true;
 let pAfter = true;
@@ -22,11 +24,19 @@ function setup() {
 
 function generate() {
     if (optionsOpen) {
+        let generateButton = document.getElementById("generateButton");
+        let optionsButton = document.getElementById("optionsButton");
+        let presetsDropdown = document.getElementById("presetsDropdown");
+        generateButton.innerHTML = "....."
+        generateButton.disabled = true;
+        optionsButton.disabled = true;
+        presetsDropdown.disabled = true;
         pBefore = document.getElementById("beforeBool").checked;
         pAfter = document.getElementById("afterBool").checked;
-        pOpacity = document.getElementById("opacitySlider").value * 0.2;
-        pSkew = document.getElementById("skewSlider").value * 0.2;
-        reRender();
+        pOpacity = parseFloat(document.getElementById("opacitySlider").value);
+        pSkew = parseFloat(document.getElementById("skewSlider").value);
+        applying = 3;
+        loop();
     } else {
         lyricSetup();
     }
@@ -113,17 +123,23 @@ function lyricSetup() {
     pixelDensity(5);
     background(0);
     if (pBefore) drawGrid();
+    curWord = -3;
     loop();
 }
 
 function draw() {
+    if (applying > 0) {
+        applying--;
+        if (applying === 0) {
+            reRender();
+            applying = false;
+            noLoop();
+        }
+        return;
+    }
     if (rawLyrics.length === 0) return;
-    if (frameCount % 1 === 0) curWord++;
-    // for (curWord = 0; curWord < lyrics.length; curWord++) {
-    //     drawLines();
-    // }
+    curWord++;
     if (curWord >= lyrics.length) {
-        // drawGrid();
         noLoop();
         curWord = -1;
         if (pAfter) drawGrid();
@@ -137,6 +153,13 @@ function reRender() {
     if (pBefore) drawGrid();
     drawAllLines();
     if (pAfter) drawGrid();
+    let generateButton = document.getElementById("generateButton");
+    let optionsButton = document.getElementById("optionsButton");
+    let presetsDropdown = document.getElementById("presetsDropdown");
+    generateButton.innerHTML = "APPLY"
+    generateButton.disabled = false;
+    optionsButton.disabled = false;
+    presetsDropdown.disabled = false;
 }
 
 function drawGrid() {
@@ -162,7 +185,6 @@ function drawLines() {
     let coords = indexData.get(lyrics[curWord]);
     strokeWeight(GRID_SIZE / 2);
     stroke(orderData.get(lyrics[curWord]), 1, 1, pSkew * (1 - coords.length / maxFreq) + pOpacity); // alpha should be constant
-    // 0.08 * (1 - coords.length / maxFreq) + 0.02
     for (let i = 0; i < coords.length; i++) {
         for (let j = 0; j < coords.length; j++) {
             line((coords[i] + .5) * GRID_SIZE, (coords[j] + .5) * GRID_SIZE, (curWord + .5) * GRID_SIZE, (curWord + .5) * GRID_SIZE);
@@ -187,4 +209,140 @@ function keyPressed() {
     }
 }
 
-let rawLyrics = "";
+function changePreset() {
+    let presetsDropdown = document.getElementById("presetsDropdown");
+    let idx = parseInt(presetsDropdown.value);
+    document.getElementById("beforeBool").checked = presets[idx].b;
+    document.getElementById("afterBool").checked = presets[idx].a;
+    document.getElementById("opacitySlider").value = presets[idx].o;
+    document.getElementById("skewSlider").value = presets[idx].s;
+    document.getElementById("lyricInput").value = presets[idx].l;
+    pBefore = presets[idx].b;
+    pAfter = presets[idx].a;
+    pOpacity = presets[idx].o;
+    pSkew = presets[idx].s;
+}
+
+let presets = [
+    {
+        b: false,
+        a: true,
+        o: 0.016,
+        s: 0.03,
+        l: "0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s\n" +
+            "t\n" +
+            "s\n" +
+            "r\n" +
+            "q\n" +
+            "p\n" +
+            "o o\n" +
+            "n\n" +
+            "m\n" +
+            "l\n" +
+            "k k\n" +
+            "j\n" +
+            "i\n" +
+            "h h\n" +
+            "g g\n" +
+            "f\n" +
+            "e e\n" +
+            "d d\n" +
+            "c\n" +
+            "b b\n" +
+            "a a\n" +
+            "9 9 9\n" +
+            "8 8\n" +
+            "7 7 7\n" +
+            "6 6\n" +
+            "5 5 5\n" +
+            "4 4 4 4\n" +
+            "3 3 3 3\n" +
+            "2 2 2 2 2\n" +
+            "1 1 1 1 1 1 1\n" +
+            "0 0 0 0 0 0 0 0 0 0\n" +
+            "0 0 0 0 0 0 0 0 0 0\n" +
+            "1 1 1 1 1 1 1\n" +
+            "2 2 2 2 2\n" +
+            "3 3 3 3\n" +
+            "4 4 4 4\n" +
+            "5 5 5\n" +
+            "6 6\n" +
+            "7 7 7\n" +
+            "8 8\n" +
+            "9 9 9\n" +
+            "a a\n" +
+            "b b\n" +
+            "c\n" +
+            "d d\n" +
+            "e e\n" +
+            "f\n" +
+            "g g\n" +
+            "h h\n" +
+            "i\n" +
+            "j\n" +
+            "k k\n" +
+            "l\n" +
+            "m\n" +
+            "n\n" +
+            "o o\n" +
+            "p\n" +
+            "q\n" +
+            "r\n" +
+            "s\n" +
+            "t\n" +
+            "s r q p o n m l k j i h g f e d c b a 9 8 7 6 5 4 3 2 1 0"
+    },
+    {
+        b: false,
+        a: false,
+        o: 0,
+        s: 0.15,
+        l: "A5 Ab5 G5 Gb5 G5 Gb5 F5 E5 F5 E5 Eb5 D5 Db5 C5 B4 Bb4\n" +
+            "A4 Ab4 G4 Gb4 G4 Gb4 F4 E4 F4 E4 Eb4 D4 Db4 C4 B4 Bb4\n" +
+            "A3 Ab3 G3 Gb3 G3 Gb3 F3 E3 A3 Ab3 G3 Gb3 G3 Gb3 F3 E3\n" +
+            "A3 Ab3 G3 Gb3 F3 Bb3 A3 Ab3 A3 Ab3 G3 Gb3 F3 Gb3 G3 Ab3\n" +
+            "A3 Ab3 G3 Gb3 F3 Bb3 A3 Ab3 A3 Ab3 G3 Gb3 F3 Gb3 G3 Ab3\n" +
+            "A3 Ab3 G3 Gb3 G3 Gb3 F3 E3 F3 Gb3 G3 Ab3 A3 Bb3 A3 Ab3\n" +
+            "A3 Ab3 G3 Gb3 G3 Gb3 F3 E3 F3 Gb3 G3 Ab3 A3 B3 C4 Db4\n" +
+            "D4 Db4 C4 B3 Bb3 Eb4 D4 Db4 D4 Db4 C4 B3 Bb3 B3 C4 Db4\n" +
+            "D4 Db4 C4 B3 Bb3 Eb4 D4 Db4 D4 Db4 C4 B3 Bb3 B3 C4 Db4\n" +
+            "D4 Db4 C4 B3 C4 B3 Bb3 A3 Bb3 B3 C4 Db4 D4 Eb4 D4 Eb4\n" +
+            "D4 Db4 C4 B3 C4 B3 Bb3 A3 Bb3 B3 C4 Db4 D4 Eb4 D4 Eb4\n" +
+            "D4 D3 D3 D3 D3 D3 D3 D3 Eb3 D3 Eb3 Eb4 Eb3 D3 Eb3 Eb4\n" +
+            "D3 D4 D4 D4 D4 D4 D4 D4 Eb4 D4 Eb4 Eb5 Eb4 D4 Eb4 Eb5\n" +
+            "D4 Eb4 D4 Db4 D4 Eb4 D4 Db4 D4 Eb4 D4 Db4 D4 Eb4 D4 Db4\n" +
+            "D4 Eb4 E4 F4 Gb4 F4 E4 Eb4 D4 Eb4 E4 F4 Gb4 F4 E4 Eb4\n" +
+            "D4 G3 G3 G3 G3 G3 G3 G3 Ab3 G3 Ab3 Ab4 Ab3 G3 Ab3 Ab4\n" +
+            "G3 G4 G4 G4 G4 G4 G4 G4 Ab4 G4 Ab4 Ab5 Ab4 G4 Ab4 Ab5\n" +
+            "G4 Ab4 G4 Gb4 G4 Ab4 G4 Gb4 G4 Ab4 G4 Gb4 G4 Ab4 G4 Gb4\n" +
+            "G4 Ab4 A4 Bb4 B4 Bb4 A4 Ab4 G4 Ab4 A4 Bb4 B4 Bb4 A4 Ab4"
+    },
+    {
+        b: true,
+        a: true,
+        o: 0,
+        s: 0,
+        l: "1\n" +
+            "1 2 1\n" +
+            "1 2 3 2 1\n" +
+            "1 2 3 4 3 2 1\n" +
+            "1 2 3 4 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 8 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 8 9 a 9 8 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 8 9 a b a 9 8 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 8 9 a 9 8 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1 \n" +
+            "1 2 3 4 5 6 7 8 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 7 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 6 5 4 3 2 1\n" +
+            "1 2 3 4 5 4 3 2 1\n" +
+            "1 2 3 4 3 2 1\n" +
+            "1 2 3 2 1\n" +
+            "1 2 1\n" +
+            "1"
+    },
+
+]

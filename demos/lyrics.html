@@ -16,12 +16,19 @@
         <div><label for="afterBool">DOTS AFTER</label>
             <input type="checkbox" checked id="afterBool"></div>
         <div><label for="opacitySlider">LINE OPACITY</label>
-            <input type="range" min="0" max="1" step="0.01" value="0.1" id="opacitySlider"></div>
+            <input type="range" min="0" max="0.2" step="0.001" value="0.08" id="opacitySlider"></div>
         <div><label for="skewSlider">OPACITY SKEW</label>
-            <input type="range" min="0" max="1" step="0.01" value="0.5" id="skewSlider"></div>
+            <input type="range" min="0" max="0.2" step="0.001" value="0.1" id="skewSlider"></div>
     </div>
     <button onclick="generate()" id="generateButton">GENERATE</button>
     <button onclick="toggleOptions()" id="optionsButton">OPTIONS</button>
+    <label for="presetsDropdown">PRESETS: </label>
+    <select name="PRESETS" id="presetsDropdown" onchange="changePreset()">
+        <option disabled selected value>(optional)</option>
+        <option value="0">Sample Circle</option>
+        <option value="1">Flight of the Bumblebee</option>
+        <option value="2">Palindromes</option>
+    </select>
 </div>
 <div id="canvDiv"></div>
 <div id="extraSpace" class="extraSpace"></div>
