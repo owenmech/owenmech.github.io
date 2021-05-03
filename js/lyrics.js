@@ -7,7 +7,8 @@ let lyrics = "";
 let indexData = new Map();
 let orderData = new Map();
 let curWord = -1;
-let hoverWord = -1;
+let hoverX = -1;
+let hoverY = -1;
 let maxFreq = 0;
 let waiting = true;
 let optionsOpen = false;
@@ -131,9 +132,6 @@ function draw() {
     } else if (animating) { // final frame
         if (pAfter) drawGrid();
         animating = false;
-        finished = createGraphics(width, height);
-        finished.pixelDensity(5);
-        finished.copy(cnv, 0, 0, width, height, 0, 0, width, height);
     } else { // hover time
         checkHover();
     }
@@ -172,8 +170,8 @@ function drawLines(word) {
 function drawKey(idx, on) {
     strokeWeight(0);
     fill(orderData.get(lyrics[idx]), 0.9, on ? 1 : 0.2, 1);
-    rect(-KEY_SIZE, idx * GRID_SIZE + GRID_SIZE * 0.05, 10, GRID_SIZE * 0.9); // left
-    rect(idx * GRID_SIZE + GRID_SIZE * 0.05, -KEY_SIZE, GRID_SIZE * 0.9, 10); // top
+    rect(-KEY_SIZE, idx * GRID_SIZE + GRID_SIZE * 0.05, 20, GRID_SIZE * 0.9); // left
+    rect(idx * GRID_SIZE + GRID_SIZE * 0.05, -KEY_SIZE, GRID_SIZE * 0.9, 20); // top
 }
 
 function checkHover() {
@@ -182,9 +180,12 @@ function checkHover() {
     let mY = mouseY - GRID_SIZE / 2;
     let xCoord = round((mX - KEY_SIZE) / (width - KEY_SIZE) * lyrics.length);
     let yCoord = round((mY - KEY_SIZE) / (height - KEY_SIZE) * lyrics.length);
-    if (mouseX <= 10 && mouseX >= 0 && mouseY >= KEY_SIZE) {
+    if (xCoord === hoverX && yCoord === hoverY) return;
+    hoverX = xCoord;
+    hoverY = yCoord;
+    if (mouseX <= 20 && mouseX >= 0 && mouseY >= KEY_SIZE) {
         idx = yCoord;
-    } else if (mouseY <= 10 && mouseY >= 0 && mouseX >= KEY_SIZE) {
+    } else if (mouseY <= 20 && mouseY >= 0 && mouseX >= KEY_SIZE) {
         idx = xCoord;
     }
 
@@ -197,7 +198,7 @@ function checkHover() {
         hovering = true;
         drawIsolated(xCoord, yCoord);
     } else if (hovering) {
-        copy(finished, 0, 0, width, height, -KEY_SIZE, -KEY_SIZE, width, height);
+        // copy(finished, 0, 0, width, height, -KEY_SIZE, -KEY_SIZE, width, height);
         hovering = false;
     }
 }
@@ -216,7 +217,7 @@ function drawIsolated(idx, idx2 = -1) {
     }
     fill(255);
     strokeWeight(0);
-    text(word, -KEY_SIZE, -10);
+    text(word, -KEY_SIZE, -5);
 }
 
 function mouseClicked() {
