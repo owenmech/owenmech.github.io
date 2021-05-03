@@ -1,0 +1,24 @@
+body {
+    color: white;
+}
+
+.lyricInput {
+    width: 100%;
+    height: 100%;
+    resize: none;
+}
+
+.optionsGroup {
+    width: 100%;
+    height: 100%;
+}
+
+.optionsGroup {
+    display: none;
+}
+
+.extraSpace {
+    position: absolute;
+    height: 100px;
+    width: 1px;
+}

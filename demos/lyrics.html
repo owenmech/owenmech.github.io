@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>l y r i c s</title>
+    <script src="../js/p5.js"></script>
+    <script src="../js/lyrics.js"></script>
+    <link rel="stylesheet" href="../css/lyrics.css">
+</head>
+<body style="background-color: black">
+<div class="lyricParent" id="lyricParent">
+    <label><textarea id="lyricInput" class="lyricInput"></textarea></label>
+    <div class="optionsGroup" id="optionsGroup">
+        <div><label for="beforeBool">DOTS BEFORE</label>
+            <input type="checkbox" checked id="beforeBool"></div>
+        <div><label for="afterBool">DOTS AFTER</label>
+            <input type="checkbox" checked id="afterBool"></div>
+        <div><label for="opacitySlider">LINE OPACITY</label>
+            <input type="range" min="0" max="1" step="0.01" value="0.1" id="opacitySlider"></div>
+        <div><label for="skewSlider">OPACITY SKEW</label>
+            <input type="range" min="0" max="1" step="0.01" value="0.5" id="skewSlider"></div>
+    </div>
+    <button onclick="generate()" id="generateButton">GENERATE</button>
+    <button onclick="toggleOptions()" id="optionsButton">OPTIONS</button>
+</div>
+<div id="canvDiv"></div>
+<div id="extraSpace" class="extraSpace"></div>
+</body>
+</html>
