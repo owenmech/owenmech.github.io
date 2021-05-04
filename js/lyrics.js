@@ -441,6 +441,20 @@ let presets = [
     },
     {
         b: false,
+        a: false,
+        o: 0.029,
+        s: 0.178,
+        l: "A4 D4 As4 G3 G4 D4 As4 G3 Fs4 D4 As4 G3 G4 D4 As4 G3\n" +
+            "G4 C4 A3 F3 F4 C4 A3 F3 E4 C4 A3 F3 F4 C4 A3 F3\n" +
+            "F4 As3 G3 E3 E4 As3 G3 E3 Ds4 As3 G3 E3 E4 As3 G3 E3\n" +
+            "E4 A3 F3 D3 D4 A3 F3 D3 Cs4 A3 F3 D3 D4 A3 F3 D3\n" +
+            "A4 D4 As4 G3 G4 D4 As4 G3 Fs4 D4 As4 G3 G4 D4 As4 G3\n" +
+            "As4 Ds4 C4 Fs3 A4 Ds4 C4 Fs3 Gs4 Ds4 C4 Fs3 A4 Ds4 C4 Fs3\n" +
+            "C5 D4 As3 G3 As4 D4 As3 G3 A4 D4 As3 G3 As4 D4 As3 G3\n" +
+            "A4 As3 G3 E3 G4 As3 G3 E3 F4 As3 G3 E3 E4 As3 G3 E3"
+    },
+    {
+        b: false,
         a: true,
         o: 0.016,
         s: 0.03,
