@@ -6,8 +6,3 @@
     box-sizing: border-box;
     font-size: 50%;
 }
-
-.fade-out {
-    opacity: 0;
-    transition: opacity 50s linear;
-}
