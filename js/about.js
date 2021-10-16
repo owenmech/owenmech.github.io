@@ -24,7 +24,7 @@ function updateGradient(grad) {
     grad.style.backgroundImage = "linear-gradient(" + deg + "deg, rgba(255,0,0," + opa + "), rgba(255,0,0,0) 70.71%),\n" +
         "            linear-gradient(" + (deg + 120) + "deg, rgba(0,255,0," + opa + "), rgba(0,255,0,0) 70.71%),\n" +
         "            linear-gradient(" + (deg + 240) + "deg, rgba(0,0,255," + opa + "), rgba(0,0,255,0) 70.71%)";
-    deg += 0.2;
+    deg += 0.3;
     if (opa < 0.6) {
         opa += 0.002;
     }
