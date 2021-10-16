@@ -1,5 +1,5 @@
 var box1, box2, box3, box4;
-const ADD_CT = 3;
+const ADD_CT = 1;
 
 window.onload = function() {
     self.setInterval(updateProjects, 150);
@@ -14,13 +14,13 @@ document.addEventListener("scroll", refreshSize);
 
 function updateProjects() {
     updateColumn(box1);
-    updateColumn(box2, 68.2);
+    updateColumn(box2, true);
     updateColumn(box3);
     updateColumn(box4);
 }
 
 function updateColumn(box, big = false) {
-    let ht = big ? 68.2 : 28.1
+    let ht = big ? 63.5 : 23.4
     let add = ADD_CT * (big ? 2 : 1);
     let randColor = Math.random() * 360;
     for (let i = 0; i < add; i++) {
@@ -58,12 +58,15 @@ function bitRandom() {
 
 function makeString() {
     let result = '';
-    for (let i = 0; i < 9; i++ ) {
-        if (Math.random() > 0.5) {
-            result += 'X';
-        } else {
-            result += ' '
+    for(let line = 0; line < 3; line++) {
+        for (let i = 0; i < 9; i++) {
+            if (Math.random() > 0.5) {
+                result += 'X';
+            } else {
+                result += ' '
+            }
         }
+        result += '\n';
     }
     return result;
 }

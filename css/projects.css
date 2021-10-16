@@ -1,9 +1,5 @@
 #logo-1, #logo-2, #logo-3, #logo-4 {
-    background:
-    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.0), rgba(255, 255, 255, 0.2) 2px, rgba(0, 0, 0, 0.3) 2px, rgba(0, 0, 0, 0.1) 4px),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1) 2px, rgba(0, 0, 0, 0.2) 2px, rgba(0, 0, 0, 0.0) 4px),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025) 50px, rgba(0, 0, 0, 0.05) 50px, rgba(0, 0, 0, 0.0) 100px);
-    background: transparent;
+    background-color: transparent;
     overflow-wrap: break-word;
     font-family: Consolas, monospace;
     color: lime;
