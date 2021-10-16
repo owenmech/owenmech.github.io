@@ -1,0 +1,18 @@
+#logo-1, #logo-2, #logo-3, #logo-4 {
+    background-color: black;
+}
+
+.logo-ratio div div {
+    background-color: pink;
+    width: 75%;
+    height: 12.5%;
+    margin: 0 auto;
+    margin-top: 10.5%;
+    position: relative;
+    border-radius: 10%;
+    visibility: hidden;
+}
+
+#logo-2 div {
+    height: 5.54%;
+}

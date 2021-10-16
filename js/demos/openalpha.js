@@ -1,8 +1,5 @@
 const shapes = [];
 let passed = 0;
-
-let indices = [];
-
 let left = true;
 
 function setup() {
@@ -12,9 +9,9 @@ function setup() {
         if (windowWidth % 2 == 1) {
             w -= 1;
         }
-        cnv = createCanvas(w - 20, w / 2 - 10);
+        cnv = createCanvas(w - 20, w / 4 - 10);
     } else {
-        cnv = createCanvas(windowHeight * 2 - 40, windowHeight - 20);
+        cnv = createCanvas(windowHeight * 2 - 40, windowHeight / 2 - 20);
     }
     cnv.position(10, 10);
     pixelDensity(1);
@@ -22,27 +19,28 @@ function setup() {
     fill(255);
     strokeWeight(.012 * width);
     background(30);
-    for (let x = 0; x < width / 2; x++) {
-        for (let y = 0; y < height; y++) {
-            let a = Math.floor(Math.abs(x - (width - 1) / 4));
-            let b = Math.floor(Math.abs(y - (height - 1) / 2));
-            if (b > a) {
-                let c = a;
-                a = b;
-                b = c;
-            }
-            let angle = Math.atan(b / a);
-            let r = Math.sqrt(a * a + b * b);
-            if (angle < Math.PI / 8) {
-                angle = Math.PI / 4 - angle;
-                a = Math.floor(r * Math.cos(angle));
-                b = Math.floor(r * Math.sin(angle));
-            }
-            a += Math.floor(3 * (width - 1) / 4);
-            b += Math.floor((height - 1) / 2);
-            indices[x + y * height] = a + b * width;
-        }
-    }
+
+    let radius = 0.06;
+    shapes.push({
+        left: true,
+        x: width / 2 - 45,
+        y: height / 2,
+        r1: radius * width / 2,
+        velX: 0,
+        velY: 0,
+        rot: 0,
+        velR: 0
+    });
+    shapes.push({
+        left: false,
+        x: width / 2 + 45,
+        y: height / 2 + 27,
+        r1: radius * width / 2 + 10,
+        velX: 0,
+        velY: 0,
+        rot: PI / 6,
+        velR: 0
+    });
 }
 
 function draw() {
@@ -51,60 +49,46 @@ function draw() {
     doShapes();
     loadPixels();
     // boolean logic
-    for (let x = width / 2 + 1; x < width; x++) {
+    let d = pixelDensity();
+    for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
-            let pix = (x + y * width) * 4;
-            if (pixels[pix] % 2 == 0) {
-                pixels[pix + 0] = 0;
-                pixels[pix + 1] = 20;
-                pixels[pix + 2] = 60;
-                pixels[pix + 3] = 255;
-            } else {
-                pixels[pix + 0] = 0;
-                pixels[pix + 1] = 200;
-                pixels[pix + 2] = 255;
-                pixels[pix + 3] = 255;
-            }
+            for (let i = 0; i < d; i++) {
+                for (let j = 0; j < d; j++) {
+                    let pix = ((x * d + i) + (y * d + j) * width * d) * 4;
+                    if (pixels[pix] % 2 == 0) {
+                        pixels[pix + 0] = 0;
+                        pixels[pix + 1] = 200;
+                        pixels[pix + 2] = 255;
+                        pixels[pix + 3] = 255;
+                    } else {
+                        pixels[pix + 0] = 0;
+                        pixels[pix + 1] = 20;
+                        pixels[pix + 2] = 60;
+                        pixels[pix + 3] = 255;
+                    }
+                }
         }
     }
-    // copy over
-    for (let x = 0; x < width / 2; x++) {
-        for (let y = 0; y < height; y++) {
-            let ind = indices[x + y * height] * 4;
-            let pix = (x + y * width) * 4;
-            pixels[pix + 0] = pixels[ind + 0];
-            pixels[pix + 1] = pixels[ind + 1];
-            pixels[pix + 2] = pixels[ind + 2];
-            pixels[pix + 3] = pixels[ind + 3];
-        }
-    }
-    // black divider
-    for (let x = width / 2; x <= width / 2 + 1; x++) {
-        for (let y = 0; y < height; y++) {
-            let pix = (x + y * width) * 4;
-            pixels[pix + 0] = 0;
-            pixels[pix + 1] = 0;
-            pixels[pix + 2] = 0;
-            pixels[pix + 3] = 0;
-        }
-    }
-    updatePixels();
+}
+
+updatePixels();
 }
 
 function mouseClicked() {
-    if (mouseX <= width / 2 || mouseX >= width || mouseY < 0 || mouseY >= height) return;
+    if (mouseX < 0 || mouseX >= width || mouseY < 0 || mouseY >= height) return;
     let radius = Math.random() * 0.025 + 0.025;
     let vel = Math.random() * 0.002 + 0.0003;
+    vel = 0;
     let dir = Math.random() * 2 * PI;
     shapes.push({
         left: left,
         x: mouseX,
         y: mouseY,
-        r1: radius * width,
+        r1: radius * width / 2,
         velX: Math.cos(dir) * vel * width,
         velY: Math.sin(dir) * vel * width,
         rot: Math.random() * 2 * PI,
-        velR: Math.random() * 0.04 - 0.02
+        velR: 0
     });
     left = !left;
 }
@@ -136,7 +120,7 @@ function present(shape) {
 
     shape.x += shape.velX;
     shape.y += shape.velY;
-    if (shape.x < width / 2.0 || shape.x >= width) {
+    if (shape.x < 0 || shape.x >= width) {
         shape.velX *= -1;
     }
     if (shape.y < 0 || shape.y >= height) {
