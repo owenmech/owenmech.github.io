@@ -14,7 +14,7 @@
 @font-face { font-family: Product; font-weight: bold; src: url('../fonts/Product Sans Bold.ttf');}
 
 :root {
-    --bg-color: #2e303b;
+    --bg-color: #3c3e4b;
     --header-color: #22232b;
     font-family: "Product", sans-serif;
     font-weight: bold;

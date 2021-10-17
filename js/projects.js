@@ -22,7 +22,7 @@ function updateProjects() {
 
 function updateColumn(box, big) {
     let ht = big ? 51.8 : 11.7;
-    let ct = big ? 14 : 6;
+    let ct = big ? 14 : 4;
     let randColor = Math.random() * 360;
     let offset = Math.random() * (ht + 0.5) - 0.5;
     let randString = makeString();
