@@ -1,6 +1,14 @@
+#initials {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 0;
+    opacity: 100%;
+}
+
 .logo-ratio div {
-    background-color: white;
     background-attachment: local;
+    opacity: 0;
 }
 
 #logo-1 {
@@ -27,4 +35,72 @@
 #logo-2 {
     background-size: calc(100% * 16) calc(100% * 9 / 7);
     /*background-size: 100%;*/
+}
+
+/*
+p {
+    font-size: 1.5vw;
+}
+
+h1 {
+    font-size: 3vw;
+}
+*/
+
+.strip {
+    position: relative;
+}
+
+#bio {
+    background-color: #3d6c90;
+}
+
+.content {
+    text-align: center;
+    padding: 20px;
+}
+
+.content div {
+    position: relative;
+    text-align: left;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 3%;
+    max-width: 30%;
+    vertical-align: middle;
+}
+
+.prof-pic {
+    width: 80%;
+    margin: 10%
+}
+
+.state {
+    position: absolute;
+    width: auto;
+}
+
+.state img {
+    width: 100%;
+    height: 100%;
+}
+
+.illinois {
+    top: 10%;
+    right: 3%;
+    width: 15%;
+}
+.california {
+    bottom: 10%;
+    left: 3%;
+    width: 15%;
+}
+
+#niantic {
+    background-color: #427639;
+}
+
+#usc {
+    background-color: #7b3e38;
 }
