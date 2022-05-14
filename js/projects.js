@@ -42,14 +42,6 @@ function updateColumn(box, big) {
     node.style.color = "hsl(" + randColor + "deg, 100%, 50%)";
 }
 
-function bitRandom() {
-    let bitString = "";
-    for (let i = 0; i < 9; i++) {
-        bitString += Math.floor(Math.random() * 2);
-    }
-    return bitString;
-}
-
 function makeString() {
     let result = '';
     for (let line = 0; line < 8; line++) {

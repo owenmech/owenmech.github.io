@@ -1,9 +1,34 @@
 let grad1, grad2, grad3, grad4, initials;
 let deg;
 let opa = 0;
-let countdown = 30
+let countdown = 30;
 
-window.onload = function() {
+// bio
+let illinois, california, bioStrip, dotWrapper;
+const numSegments = 8;
+const dotsPerSeg = 6;
+const numDots = numSegments * dotsPerSeg + 1;
+const aimlessness = 0.6;
+
+// dev
+let devStrip;
+let codeElements = [];
+let codeStrings = [];
+const codeStrWidth = 0.9;
+
+// usc
+let capWrapper;
+let caps = [];
+let capCount;
+let capOrder = [];
+let capHeights = [];
+const maxCapHeight = 75;
+const minCapHeight = 45;
+let capRots = [];
+const maxCapRot = 180;
+const minCapRot = 360;
+
+window.onload = function () {
     self.setInterval(updateAbout, 30);
     grad1 = document.getElementById('logo-1');
     grad2 = document.getElementById('logo-2');
@@ -11,12 +36,30 @@ window.onload = function() {
     grad4 = document.getElementById('logo-4');
     initials = document.getElementById('initials');
     deg = Math.random() * 360;
+
+    // bio
+    illinois = document.getElementById("illinois");
+    california = document.getElementById("california");
+    bioStrip = document.getElementById("bio");
+    dotWrapper = document.getElementById("path-dots");
+    initBio();
+
+    // dev
+    codeElements.push(document.getElementById("laptop-code"));
+    codeElements.push(document.getElementById("controller-code"));
+    codeElements.push(document.getElementById("phone-code"));
+    codeElements.push(document.getElementById("desktop-code"));
+    devStrip = document.getElementById("developer");
+    initDev();
+
+    // usc
+    capWrapper = document.getElementById("cap-wrapper");
+    initUsc();
 }
 
 
 function updateAbout() {
-    if (countdown > 0)
-    {
+    if (countdown > 0) {
         countdown--;
         return;
     }
@@ -32,9 +75,143 @@ function updateAbout() {
 }
 
 function updateGradient(grad) {
-    let scaled = opa * 0.6
+    let scaled = opa * 0.6;
     grad.style.backgroundImage = "linear-gradient(" + deg + "deg, rgba(255,0,0," + scaled + "), rgba(255,0,0,0) 70.71%),\n" +
         "            linear-gradient(" + (deg + 120) + "deg, rgba(0,255,0," + scaled + "), rgba(0,255,0,0) 70.71%),\n" +
         "            linear-gradient(" + (deg + 240) + "deg, rgba(0,0,255," + scaled + "), rgba(0,0,255,0) 70.71%)";
     grad.style.opacity = (opa * 100) + "%";
+}
+
+document.addEventListener("scroll", function () {
+    let maxScroll = document.body.clientHeight - window.innerHeight;
+    let progress = window.scrollY / maxScroll;
+    let bioProgress = reclamp(progress * 2);
+    let devProgress = reclamp(progress * 2 - 0.75);
+    let uscProgress = reclamp(progress * 3 - 2);
+
+    // bio
+    let dots = dotWrapper.children;
+    let numToShow = bioProgress * dots.length;
+    for (let i = 0; i < dots.length; i++) {
+        if (i < numToShow) {
+            dots[i].style.opacity = "100%";
+        } else {
+            dots[i].style.opacity = "0%";
+        }
+    }
+
+    // dev
+    let left = true;
+    for (let i = 0; i < codeElements.length; ++i) {
+        let charsToShow = devProgress * codeStrings[i].length;
+        if (left) {
+            codeElements[i].innerHTML = codeStrings[i].substr(0, charsToShow);
+        } else {
+            codeElements[i].innerHTML = codeStrings[i].substr(codeStrings[i].length - charsToShow);
+        }
+        left = !left;
+    }
+
+    // usc
+    for (let i = 0; i < capCount; ++i) {
+        let invFrac = 2.5;
+        let capProgress = reclamp(uscProgress * invFrac - i * (invFrac - 1) / (capCount - 1));
+        let eased = 1 - Math.pow(1 - capProgress, 3);
+        caps[capOrder[i]].style.bottom = (eased * capHeights[i]) + "%";
+        let transStr = "translate(-50%, 0) rotate(" + (eased * capRots[i]) + "deg)";
+        caps[capOrder[i]].style.transform = transStr;
+    }
+});
+
+function initBio() {
+    // create elements
+    for (let i = 0; i < numDots; ++i) {
+        const dot = document.createElement("div");
+        dotWrapper.appendChild(dot);
+    }
+
+    // calculate straight shot
+    let startPos = [
+        illinois.offsetLeft + illinois.clientWidth * 0.85,
+        illinois.offsetTop + illinois.clientHeight * 0.125
+    ];
+    let endPos = [
+        california.offsetLeft + california.clientWidth * 0.6,
+        california.offsetTop + california.clientHeight * 0.80
+    ];
+    let pathVec = [endPos[0] - startPos[0], endPos[1] - startPos[1]];
+
+    // build jagged path points
+    let segVec = [pathVec[0] / numSegments, pathVec[1] / numSegments];
+    let perpVec = [-segVec[1], segVec[0]];
+    let pathPoints = [startPos];
+    let curPos = [startPos[0], startPos[1]];
+    for (let i = 0; i < numSegments - 1; ++i) {
+        curPos[0] += segVec[0];
+        curPos[1] += segVec[1];
+        let nextPoint = [curPos[0], curPos[1]];
+        if (Math.random() > 0.5) {
+            nextPoint[0] += Math.random() * perpVec[0] * aimlessness;
+            nextPoint[1] += Math.random() * perpVec[1] * aimlessness;
+        } else {
+            nextPoint[0] -= Math.random() * perpVec[0] * aimlessness;
+            nextPoint[1] -= Math.random() * perpVec[1] * aimlessness;
+        }
+        pathPoints.push(nextPoint);
+    }
+    pathPoints.push(endPos);
+
+    // place points along path
+    curPos = [startPos[0], startPos[1]];
+    let dots = dotWrapper.children;
+    let i = 0;
+    for (let s = 0; s < numSegments; ++s) {
+        let pathStep = [
+            pathPoints[s + 1][0] - pathPoints[s][0],
+            pathPoints[s + 1][1] - pathPoints[s][1]
+        ];
+        for (d = 0; d < dotsPerSeg; ++d) {
+            dots[i].style.left = (curPos[0] - dots[i].clientWidth * 0.5) + "px";
+            dots[i].style.top = (curPos[1] - dots[i].clientHeight * 0.5) + "px";
+            curPos[0] += pathStep[0] / dotsPerSeg;
+            curPos[1] += pathStep[1] / dotsPerSeg;
+            i++
+        }
+    }
+
+    // last dot
+    dots[i].style.left = (endPos[0] - dots[i].clientWidth * 0.5) + "px";
+    dots[i].style.top = (endPos[1] - dots[i].clientHeight * 0.5) + "px";
+}
+
+function initDev() {
+    let charWidth = codeElements[0].clientWidth;
+    let numChars = devStrip.clientWidth / charWidth * codeStrWidth;
+
+    for (let i = 0; i < codeElements.length; ++i) {
+        let str = "";
+        for (let c = 0; c < numChars; ++c) {
+            if (Math.random() > 0.5) {
+                str += '0';
+            } else {
+                str += '1';
+            }
+        }
+        codeStrings.push(str);
+    }
+}
+
+function initUsc() {
+    caps = [];
+    capOrder = [];
+    capCount = capWrapper.children.length;
+    for (let i = 0; i < capCount; ++i)
+    {
+        caps.push(capWrapper.children[i].children[0]);
+        capOrder.push(i);
+        capHeights.push(Math.random() * (maxCapHeight - minCapHeight) + minCapHeight);
+        capRots.push(Math.random() * (maxCapRot - minCapRot) + minCapRot);
+    }
+    shuffleArray(capOrder);
+
 }

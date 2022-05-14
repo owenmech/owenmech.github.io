@@ -47,14 +47,6 @@ h1 {
 }
 */
 
-.strip {
-    position: relative;
-}
-
-#bio {
-    background-color: #3d6c90;
-}
-
 .content {
     text-align: center;
     padding: 20px;
@@ -69,6 +61,19 @@ h1 {
     min-width: 3%;
     max-width: 30%;
     vertical-align: middle;
+}
+
+.decor {
+    opacity: 30%;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+/* region bio */
+
+#bio {
+    background-color: #3d6c90;
 }
 
 .prof-pic {
@@ -86,21 +91,113 @@ h1 {
     height: 100%;
 }
 
-.illinois {
+#illinois {
     top: 10%;
     right: 3%;
     width: 15%;
 }
-.california {
+#california {
     bottom: 10%;
     left: 3%;
     width: 15%;
 }
 
-#niantic {
+#path-dots {
+    width: 100%;
+    height: 100%;
+}
+
+#path-dots div {
+    width: 1vw;
+    height: 1vw;
+    opacity: 0;
+    border-radius: 20px;
+    background: #000000;
+    position: absolute;
+}
+
+/* endregion bio */
+
+/* region dev */
+
+#developer {
     background-color: #427639;
 }
 
-#usc {
-    background-color: #7b3e38;
+.dev-row {
+    height: 25%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    font-family: monospace;
+    color: black;
 }
+
+.vertical-center {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.dev-icon {
+    height: 7em;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.dev-code {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 3em;
+}
+
+#laptop-row {
+    top: 0;
+}
+
+#controller-row {
+    top: 25%;
+    text-align: right;
+}
+
+#phone-row {
+    top: 50%;
+}
+
+#desktop-row {
+    top: 75%;
+    text-align: right;
+}
+
+/* endregion dev */
+
+/* region usc */
+
+#usc {
+    background-color: #843f38;
+}
+
+#cap-wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+#usc .decor div {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+#usc .decor div img {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+/* endregion usc */

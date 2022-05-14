@@ -74,6 +74,12 @@ a:hover {
     height:5px;
     background-color: cyan;
 }
+
+.buffer {
+    height: 1ex;
+    width: 100%;
+    background: var(--bg-color);
+}
 /*endregion*/
 
 /* region Logo */
@@ -132,7 +138,8 @@ a {
 }
 
 section {
-    margin: 20px 0;
+    position: relative;
+    margin: 2ex 0;
 }
 
 p {
