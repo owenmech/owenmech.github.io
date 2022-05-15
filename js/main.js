@@ -38,3 +38,8 @@ function shuffleArray(array) {
         array[j] = temp;
     }
 }
+
+function stagger(progress, multiplier, index, total)
+{
+    return reclamp(progress * multiplier - index * (multiplier - 1) / (total - 1));
+}

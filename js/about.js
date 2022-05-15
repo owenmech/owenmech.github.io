@@ -12,9 +12,10 @@ const aimlessness = 0.6;
 
 // dev
 let devStrip;
+let devIcon;
 let codeElements = [];
 let codeStrings = [];
-const codeStrWidth = 0.9;
+const codeStrWidth = 0.95;
 
 // usc
 let capWrapper;
@@ -50,6 +51,7 @@ window.onload = function () {
     codeElements.push(document.getElementById("phone-code"));
     codeElements.push(document.getElementById("desktop-code"));
     devStrip = document.getElementById("developer");
+    devIcon = document.getElementsByClassName("dev-icon")[0];
     initDev();
 
     // usc
@@ -85,9 +87,9 @@ function updateGradient(grad) {
 document.addEventListener("scroll", function () {
     let maxScroll = document.body.clientHeight - window.innerHeight;
     let progress = window.scrollY / maxScroll;
-    let bioProgress = reclamp(progress * 2);
-    let devProgress = reclamp(progress * 2 - 0.75);
-    let uscProgress = reclamp(progress * 3 - 2);
+    let bioProgress = stagger(progress, 3, 0, 3);
+    let devProgress = stagger(progress, 2, 1, 3);
+    let uscProgress = stagger(progress, 3.7, 3, 4);
 
     // bio
     let dots = dotWrapper.children;
@@ -103,7 +105,8 @@ document.addEventListener("scroll", function () {
     // dev
     let left = true;
     for (let i = 0; i < codeElements.length; ++i) {
-        let charsToShow = devProgress * codeStrings[i].length;
+        let rowProgress = stagger(devProgress, 1.5, i, codeElements.length);
+        let charsToShow = rowProgress * codeStrings[i].length;
         if (left) {
             codeElements[i].innerHTML = codeStrings[i].substr(0, charsToShow);
         } else {
@@ -115,7 +118,7 @@ document.addEventListener("scroll", function () {
     // usc
     for (let i = 0; i < capCount; ++i) {
         let invFrac = 2.5;
-        let capProgress = reclamp(uscProgress * invFrac - i * (invFrac - 1) / (capCount - 1));
+        let capProgress = stagger(uscProgress, 2.5, i, capCount);
         let eased = 1 - Math.pow(1 - capProgress, 3);
         caps[capOrder[i]].style.bottom = (eased * capHeights[i]) + "%";
         let transStr = "translate(-50%, 0) rotate(" + (eased * capRots[i]) + "deg)";
@@ -186,7 +189,7 @@ function initBio() {
 
 function initDev() {
     let charWidth = codeElements[0].clientWidth;
-    let numChars = devStrip.clientWidth / charWidth * codeStrWidth;
+    let numChars = (devStrip.clientWidth - devIcon.clientWidth) / charWidth * codeStrWidth;
 
     for (let i = 0; i < codeElements.length; ++i) {
         let str = "";

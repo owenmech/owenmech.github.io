@@ -1,4 +1,4 @@
-var animState = 5;
+var animState = 1;
 const STATES = 8;
 var box1, box2, box3, box4;
 

@@ -30,7 +30,84 @@ h1 {
     font-size: 4em;
 }
 
-/*region Header*/
+a {
+    color: white;
+}
+
+section {
+    position: relative;
+    margin: 2ex 0;
+}
+
+p {
+    font-size: 2em;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.content {
+    text-align: center;
+    padding: 20px;
+}
+
+.content div {
+    position: relative;
+    text-align: left;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: middle;
+}
+
+.text {
+    width: 30%;
+}
+
+.visual {
+    width: 30%;
+    height: 0;
+    padding-bottom: 30%;
+}
+
+.decor {
+    opacity: 30%;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.vis-img {
+    width: 80%;
+    margin: 10%;
+}
+
+.youtube-wrapper {
+    position: relative;
+    width: 100%;
+    margin-top: 21.875%;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+
+.youtube-wrapper iframe {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+}
+
+.video-file {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+/* region header */
 .header {
     position: fixed;
     top: 0;
@@ -80,9 +157,9 @@ a:hover {
     width: 100%;
     background: var(--bg-color);
 }
-/*endregion*/
+/* endregion header */
 
-/* region Logo */
+/* region logo */
 .logo-wrapper {
     background-color: var(--header-color);
     width: 100%;
@@ -131,17 +208,4 @@ a:hover {
     top:    calc(100% /  9 * 5);
     left:   calc(100% / 16 * 13);
 }
-/* endregion */
-
-a {
-    color: white;
-}
-
-section {
-    position: relative;
-    margin: 2ex 0;
-}
-
-p {
-    font-size: 2em;
-}
+/* endregion logo */
