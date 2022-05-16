@@ -16,6 +16,7 @@
 :root {
     --bg-color: #3c3e4b;
     --header-color: #22232b;
+    --content-size: 800px;
     font-family: "Product", sans-serif;
     font-weight: bold;
     color: white;
@@ -27,7 +28,7 @@ body {
 }
 
 h1 {
-    font-size: 3em;
+    font-size: 4em;
 }
 
 a {
@@ -40,7 +41,7 @@ section {
 }
 
 p {
-    font-size: 1.7em;
+    font-size: 2em;
 }
 
 .italic {
@@ -69,15 +70,15 @@ p {
 
 .text {
     text-align: left;
-    max-width: 600px;
+    max-width: var(--content-size);
 }
 
 .visual {
     width: 100%;
-    max-width: 600px;
+    max-width: var(--content-size);
     margin: 0;
     padding: 0;
-    min-height: 600px;
+    min-height: var(--content-size);
 }
 
 .img-wrapper {
@@ -178,7 +179,7 @@ a:hover {
 
 .logo-container
 {
-    width: 50%;
+    width: 80%;
     margin: 0 auto;
     position: relative;
 }
