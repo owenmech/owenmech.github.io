@@ -29,6 +29,14 @@
 
 /* endregion equinox */
 
+/* region settlers */
+
+#settlers {
+    background-image: linear-gradient(45deg, #724632, #cb9942);
+}
+
+/* endregion settlers */
+
 /* region ddr */
 
 #ddr {
@@ -37,10 +45,18 @@
 
 /* endregion ddr */
 
+/* region check-it-out */
+
+#check-it-out {
+    background-image: linear-gradient(45deg, #9c6443, #eeb2aa);
+}
+
+/* endregion check-it-out */
+
 /* region sinking-inn */
 
 #sinking-inn {
-    background-image: linear-gradient(45deg, #2a4e4d, #4b8186);
+    background-image: linear-gradient(45deg, #2a4e4d, #578995);
 }
 
 /* endregion sinking-inn */
@@ -52,19 +68,3 @@
 }
 
 /* endregion spooky-speakeasy */
-
-/* region check-it-out */
-
-#check-it-out {
-    background-image: linear-gradient(45deg, #72432e, #c68b26);
-}
-
-.check-it-out-trailer {
-    position: absolute;
-    width: 80%;
-    left: 10%;
-    top: 50%;
-    transform: translate(0, -50%);
-}
-
-/* endregion check-it-out */

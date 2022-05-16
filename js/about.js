@@ -201,6 +201,7 @@ function initDev() {
             }
         }
         codeStrings.push(str);
+        codeElements[i].innerHTML = "";
     }
 }
 
