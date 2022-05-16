@@ -15,7 +15,7 @@ let devStrip;
 let devIcon;
 let codeElements = [];
 let codeStrings = [];
-const codeStrWidth = 0.95;
+const codeStrWidth = 0.90;
 
 // usc
 let capWrapper;
