@@ -1,5 +1,4 @@
 /* region logo */
-
 #initials {
     position: absolute;
     width: 100%;
@@ -38,11 +37,9 @@
     background-size: calc(100% * 16) calc(100% * 9 / 7);
     /*background-size: 100%;*/
 }
-
 /* endregion logo */
 
 /* region bio */
-
 #bio {
     background-image: linear-gradient(45deg, #3d5e90, #3d8490);
 }
@@ -74,19 +71,17 @@
 }
 
 #path-dots div {
-    width: 1vw;
-    height: 1vw;
+    width: 1.5vw;
+    height: 1.5vw;
     opacity: 0;
     border-radius: 20px;
     background: #000000;
     position: absolute;
 }
-
 /* endregion bio */
 
 /* region dev */
-
-#developer {
+#dev {
     background-image: linear-gradient(45deg, #3d6c35, #5f8231);
 }
 
@@ -136,11 +131,9 @@
     top: 75%;
     text-align: right;
 }
-
 /* endregion dev */
 
 /* region usc */
-
 #usc {
     background-image: linear-gradient(45deg, #6f242d, #974b34);
 }
@@ -165,5 +158,4 @@
     left: 50%;
     transform: translate(-50%, 0);
 }
-
 /* endregion usc */

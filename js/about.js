@@ -1,10 +1,13 @@
+// logo
 let grad1, grad2, grad3, grad4, initials;
 let deg;
 let opa = 0;
 let countdown = 30;
 
 // bio
-let illinois, california, bioStrip, dotWrapper;
+let bioStrip;
+let illinois, california;
+let dotWrapper;
 const numSegments = 8;
 const dotsPerSeg = 6;
 const numDots = numSegments * dotsPerSeg + 1;
@@ -18,6 +21,7 @@ let codeStrings = [];
 const codeStrWidth = 0.90;
 
 // usc
+let uscStrip;
 let capWrapper;
 let caps = [];
 let capCount;
@@ -30,6 +34,44 @@ const maxCapRot = 180;
 const minCapRot = 360;
 
 window.onload = function () {
+    initAbout();
+
+    initBio();
+    initDev();
+    initUsc();
+
+    resizeAbout();
+}
+
+function resizeAbout() {
+    resizeBio();
+    resizeDev();
+    resizeUsc();
+
+    scrollAbout();
+}
+
+window.addEventListener('resize', resizeAbout);
+
+function scrollAbout() {
+    // let maxScroll = document.body.clientHeight - window.innerHeight;
+    // let progress = window.scrollY / maxScroll;
+    // let bioProgress = stagger(progress, 3, 0, 3);
+    // let devProgress = stagger(progress, 2, 1, 3);
+    // let uscProgress = stagger(progress, 3.7, 3, 4);
+    let bioProgress = scrollRemap(bioStrip, 0.1, 0.6);
+    let devProgress = scrollRemap(devStrip, 0.1, 0.7);
+    let uscProgress = scrollRemap(uscStrip, 0.25, 1);
+
+    scrollBio(bioProgress);
+    scrollDev(devProgress);
+    scrollUsc(uscProgress);
+}
+
+document.addEventListener("scroll", scrollAbout);
+
+// region logo
+function initAbout() {
     self.setInterval(updateAbout, 30);
     grad1 = document.getElementById('logo-1');
     grad2 = document.getElementById('logo-2');
@@ -37,28 +79,7 @@ window.onload = function () {
     grad4 = document.getElementById('logo-4');
     initials = document.getElementById('initials');
     deg = Math.random() * 360;
-
-    // bio
-    illinois = document.getElementById("illinois");
-    california = document.getElementById("california");
-    bioStrip = document.getElementById("bio");
-    dotWrapper = document.getElementById("path-dots");
-    initBio();
-
-    // dev
-    codeElements.push(document.getElementById("laptop-code"));
-    codeElements.push(document.getElementById("controller-code"));
-    codeElements.push(document.getElementById("phone-code"));
-    codeElements.push(document.getElementById("desktop-code"));
-    devStrip = document.getElementById("developer");
-    devIcon = document.getElementsByClassName("dev-icon")[0];
-    initDev();
-
-    // usc
-    capWrapper = document.getElementById("cap-wrapper");
-    initUsc();
 }
-
 
 function updateAbout() {
     if (countdown > 0) {
@@ -84,55 +105,23 @@ function updateGradient(grad) {
     grad.style.opacity = (opa * 100) + "%";
 }
 
-document.addEventListener("scroll", function () {
-    let maxScroll = document.body.clientHeight - window.innerHeight;
-    let progress = window.scrollY / maxScroll;
-    let bioProgress = stagger(progress, 3, 0, 3);
-    let devProgress = stagger(progress, 2, 1, 3);
-    let uscProgress = stagger(progress, 3.7, 3, 4);
+// endregion logo
 
-    // bio
-    let dots = dotWrapper.children;
-    let numToShow = bioProgress * dots.length;
-    for (let i = 0; i < dots.length; i++) {
-        if (i < numToShow) {
-            dots[i].style.opacity = "100%";
-        } else {
-            dots[i].style.opacity = "0%";
-        }
-    }
-
-    // dev
-    let left = true;
-    for (let i = 0; i < codeElements.length; ++i) {
-        let rowProgress = stagger(devProgress, 1.5, i, codeElements.length);
-        let charsToShow = rowProgress * codeStrings[i].length;
-        if (left) {
-            codeElements[i].innerHTML = codeStrings[i].substr(0, charsToShow);
-        } else {
-            codeElements[i].innerHTML = codeStrings[i].substr(codeStrings[i].length - charsToShow);
-        }
-        left = !left;
-    }
-
-    // usc
-    for (let i = 0; i < capCount; ++i) {
-        let invFrac = 2.5;
-        let capProgress = stagger(uscProgress, 2.5, i, capCount);
-        let eased = 1 - Math.pow(1 - capProgress, 3);
-        caps[capOrder[i]].style.bottom = (eased * capHeights[i]) + "%";
-        let transStr = "translate(-50%, 0) rotate(" + (eased * capRots[i]) + "deg)";
-        caps[capOrder[i]].style.transform = transStr;
-    }
-});
-
+// region bio
 function initBio() {
+    illinois = document.getElementById("illinois");
+    california = document.getElementById("california");
+    bioStrip = document.getElementById("bio");
+    dotWrapper = document.getElementById("path-dots");
+
     // create elements
     for (let i = 0; i < numDots; ++i) {
         const dot = document.createElement("div");
         dotWrapper.appendChild(dot);
     }
+}
 
+function resizeBio() {
     // calculate straight shot
     let startPos = [
         illinois.offsetLeft + illinois.clientWidth * 0.85,
@@ -187,9 +176,36 @@ function initBio() {
     dots[i].style.top = (endPos[1] - dots[i].clientHeight * 0.5) + "px";
 }
 
+function scrollBio(bioProgress) {
+    let dots = dotWrapper.children;
+    let numToShow = bioProgress * dots.length;
+    for (let i = 0; i < dots.length; i++) {
+        if (i < numToShow) {
+            dots[i].style.opacity = "100%";
+        } else {
+            dots[i].style.opacity = "0%";
+        }
+    }
+}
+
+// endregion bio
+
+//region dev
 function initDev() {
+    codeElements.push(document.getElementById("laptop-code"));
+    codeElements.push(document.getElementById("controller-code"));
+    codeElements.push(document.getElementById("phone-code"));
+    codeElements.push(document.getElementById("desktop-code"));
+    devStrip = document.getElementById("dev");
+    devIcon = document.getElementsByClassName("dev-icon")[0];
+}
+
+function resizeDev() {
+    codeElements[0].innerHTML = "0";
     let charWidth = codeElements[0].clientWidth;
     let numChars = (devStrip.clientWidth - devIcon.clientWidth) / charWidth * codeStrWidth;
+
+    codeStrings = [];
 
     for (let i = 0; i < codeElements.length; ++i) {
         let str = "";
@@ -205,12 +221,30 @@ function initDev() {
     }
 }
 
+function scrollDev(devProgress) {
+    let left = true;
+    for (let i = 0; i < codeElements.length; ++i) {
+        let rowProgress = stagger(devProgress, 1.5, i, codeElements.length);
+        let charsToShow = rowProgress * codeStrings[i].length;
+        if (left) {
+            codeElements[i].innerHTML = codeStrings[i].substr(0, charsToShow);
+        } else {
+            codeElements[i].innerHTML = codeStrings[i].substr(codeStrings[i].length - charsToShow);
+        }
+        left = !left;
+    }
+}
+
+// endregion dev
+
+// region usc
 function initUsc() {
+    capWrapper = document.getElementById("cap-wrapper");
+    uscStrip = document.getElementById("usc");
     caps = [];
     capOrder = [];
     capCount = capWrapper.children.length;
-    for (let i = 0; i < capCount; ++i)
-    {
+    for (let i = 0; i < capCount; ++i) {
         caps.push(capWrapper.children[i].children[0]);
         capOrder.push(i);
         capHeights.push(Math.random() * (maxCapHeight - minCapHeight) + minCapHeight);
@@ -219,3 +253,20 @@ function initUsc() {
     shuffleArray(capOrder);
 
 }
+
+function resizeUsc() {
+
+}
+
+function scrollUsc(uscProgress) {
+    for (let i = 0; i < capCount; ++i) {
+        let invFrac = 2.5;
+        let capProgress = stagger(uscProgress, 2.5, i, capCount);
+        let eased = 1 - Math.pow(1 - capProgress, 3);
+        caps[capOrder[i]].style.bottom = (eased * capHeights[i]) + "%";
+        let transStr = "translate(-50%, 0) rotate(" + (eased * capRots[i]) + "deg)";
+        caps[capOrder[i]].style.transform = transStr;
+    }
+}
+
+// endregion usc

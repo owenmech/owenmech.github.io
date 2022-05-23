@@ -16,7 +16,7 @@
 :root {
     --bg-color: #3c3e4b;
     --header-color: #22232b;
-    --content-size: 800px;
+    --content-size: 600px;
     font-family: "Product", sans-serif;
     font-weight: bold;
     color: white;
@@ -49,7 +49,7 @@ p {
 }
 
 .decor {
-    opacity: 30%;
+    opacity: 35%;
     height: 100%;
     width: 100%;
     position: absolute;

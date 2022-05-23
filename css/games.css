@@ -1,5 +1,4 @@
 /* region logo */
-
 .logo-ratio div {
     background-color: transparent;
     background-repeat: no-repeat;
@@ -53,26 +52,65 @@
     margin: 10%;
 }
 
+.target {
+    width: min(500px, 80vw);
+    height: min(500px, 80vw);
+    position: absolute;
+}
+
+#target-left {
+    left: min(100px, 10vw);
+    top: 50px;
+}
+
+#target-right {
+    right: min(100px, 10vw);
+    bottom: 50px;
+}
+
 /* endregion spective */
 
 /* region rotator */
-
 #rotator {
     background-image: linear-gradient(45deg, #2c2953, #484d8b);
 }
 
+.rot-container {
+    height: 400px;
+    width: 400px;
+    position: absolute;
+}
+
+#rot-cont-tl {
+    top: 0;
+    left: 0;
+}
+
+#rot-cont-tr {
+    top: 0;
+    right: 0;
+}
+
+#rot-cont-br {
+    bottom: 0;
+    right: 0;
+}
+
+#rot-cont-bl {
+    bottom: 0;
+    left: 0;
+}
+
 /* endregion rotator*/
 
-/* region rotator */
-
+/* region wordflop */
 #wordflop {
     background-image: linear-gradient(45deg, #245046, #32919e);
 }
 
-/* endregion rotator */
+/* endregion wordflop */
 
 /* region check-it-out */
-
 #check-it-out {
     background-image: linear-gradient(45deg, #9c6443, #eeb2aa);
 }
@@ -80,7 +118,6 @@
 /* endregion check-it-out */
 
 /* region wishy-washy */
-
 #wishy-washy {
     background-image: linear-gradient(45deg, #4c5a9e, #6FA0DE);
 }

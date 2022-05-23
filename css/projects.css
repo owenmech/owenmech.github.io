@@ -1,5 +1,4 @@
 /* region logo */
-
 #logo-1, #logo-2, #logo-3, #logo-4 {
     background-color: transparent;
     overflow-wrap: break-word;
@@ -8,7 +7,6 @@
     box-sizing: border-box;
     font-size: .5em;
 }
-
 /* endregion logo */
 
 .vis-img {
@@ -35,41 +33,31 @@
 }
 
 /* region lyrics */
-
 #lyrics {
     background-image: linear-gradient(45deg, #71315c, #5850c6);
 }
-
 /* endregion lyrics */
 
 /* region snowflakes */
-
 #snowflakes {
     background-image: linear-gradient(45deg, #2b5580, #9cc7ff);
 }
-
 /* endregion snowflakes */
 
 /* region metro */
-
 #metro {
     background-image: linear-gradient(45deg, #8b3030, #cd9017);
 }
-
 /* endregion metro */
 
 /* region kaleidoscope */
-
 #kaleidoscope {
     background-image: linear-gradient(45deg, #3d7131, #50bcc6);
 }
-
 /* endregion kaleidoscope */
 
 /* region website */
-
 #website {
     background-image: linear-gradient(45deg, #080810, #2d2f39);
 }
-
 /* endregion website */
