@@ -7,12 +7,12 @@ var box1, box2, box3, box4;
 let spectiveStrip;
 let polyLeft, polyRight;
 const squareLCoords = [
-    [40, 40], // TL
-    [60, 40], // TR
-    [60, 40],
-    [60, 60], // BR
-    [40, 60],
-    [40, 60] // BL
+    [30, 30], // TL
+    [70, 30], // TR
+    [70, 30], // (TR)
+    [70, 70], // BR
+    [30, 70], // (BL)
+    [30, 70] // BL
 ];
 const diamondCoords = [
     [50, 20], // T
@@ -23,12 +23,12 @@ const diamondCoords = [
     [0, 45] // L
 ];
 const squareRCoords = [
-    [40, 40], // TL
-    [60, 40], // TR
-    [60, 60], // BR
-    [60, 60], // (BR)
-    [40, 60], // (BL)
-    [40, 60] // BL
+    [30, 30], // TL
+    [70, 30], // TR
+    [70, 70], // BR
+    [70, 70], // (BR)
+    [30, 70], // (BL)
+    [30, 70] // BL
 ];
 const trapezoidCoords = [
     [20, 30], // TL
