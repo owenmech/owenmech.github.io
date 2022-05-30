@@ -88,3 +88,11 @@ function scrollRemap(element, animStart, animEnd) {
     let animProgress = (viewProgress - animStart) / (animEnd - animStart);
     return reclamp(animProgress);
 }
+
+function scrollStagger(element, animStart, animEnd, duration, total, index) {
+    let startRange = (animEnd - animStart) - duration;
+    let offset = startRange / (total + 1); // 0 = first start, 1 = last start
+    let curStart = animStart + offset * index;
+    let curEnd = curStart + duration;
+    return scrollRemap(element, curStart, curEnd);
+}

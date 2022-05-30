@@ -1,66 +1,17 @@
-// logo
-var animState = 1;
-const STATES = 8;
-var box1, box2, box3, box4;
-
-// spective
-let spectiveStrip;
-let polyLeft, polyRight;
-const squareLCoords = [
-    [30, 30], // TL
-    [70, 30], // TR
-    [70, 30], // (TR)
-    [70, 70], // BR
-    [30, 70], // (BL)
-    [30, 70] // BL
-];
-const diamondCoords = [
-    [50, 20], // T
-    [100, 45], // R
-    [100, 50], // (R)
-    [50, 85], // (B)
-    [0, 50], // (L)
-    [0, 45] // L
-];
-const squareRCoords = [
-    [30, 30], // TL
-    [70, 30], // TR
-    [70, 70], // BR
-    [70, 70], // (BR)
-    [30, 70], // (BL)
-    [30, 70] // BL
-];
-const trapezoidCoords = [
-    [20, 30], // TL
-    [80, 30], // TR
-    [100, 70], // BR
-    [100, 75], // (BR)
-    [0, 75], // (BL)
-    [0, 70] // BL
-];
-
-// rotator
-let rotatorStrip;
-let rcTL, rcTR, rcBR, rcBL;
-let rotTL, rotTR, rotBR, rotBL;
-const dirs = [
-    [0, -1],
-    [1, 0],
-    [0, 1],
-    [-1, 0]
-];
-
 window.onload = function () {
     initGames();
 
     initSpective();
     initRotator();
+    initWordflop()
 
     resizeGames();
 }
 
 function resizeGames() {
     resizeSpective();
+    resizeRotator();
+    resizeWordflop();
 
     scrollGames();
 }
@@ -70,11 +21,16 @@ window.addEventListener('resize', resizeGames);
 function scrollGames() {
     scrollSpective();
     scrollRotator();
+    scrollWordflop();
 }
 
 document.addEventListener("scroll", scrollGames);
 
 // region logo
+var animState = 1;
+const STATES = 8;
+var box1, box2, box3, box4;
+
 function initGames() {
     self.setInterval(updateGames, 175);
     box1 = document.getElementById('logo-1');
@@ -117,6 +73,41 @@ function randomHue(box) {
 // endregion logo
 
 // region spective
+let spectiveStrip;
+let polyLeft, polyRight;
+const squareLCoords = [
+    [30, 30], // TL
+    [70, 30], // TR
+    [70, 30], // (TR)
+    [70, 70], // BR
+    [30, 70], // (BL)
+    [30, 70] // BL
+];
+const diamondCoords = [
+    [50, 20], // T
+    [100, 45], // R
+    [100, 50], // (R)
+    [50, 85], // (B)
+    [0, 50], // (L)
+    [0, 45] // L
+];
+const squareRCoords = [
+    [30, 30], // TL
+    [70, 30], // TR
+    [70, 70], // BR
+    [70, 70], // (BR)
+    [30, 70], // (BL)
+    [30, 70] // BL
+];
+const trapezoidCoords = [
+    [20, 30], // TL
+    [80, 30], // TR
+    [100, 70], // BR
+    [100, 75], // (BR)
+    [0, 75], // (BL)
+    [0, 70] // BL
+];
+
 function initSpective() {
     spectiveStrip = document.getElementById('spective');
     polyLeft = document.getElementById('poly-left');
@@ -146,6 +137,16 @@ function scrollSpective() {
 // endregion spective
 
 // region rotator
+let rotatorStrip;
+let rcTL, rcTR, rcBR, rcBL;
+let rotTL, rotTR, rotBR, rotBL;
+const dirs = [
+    [0, -1],
+    [1, 0],
+    [0, 1],
+    [-1, 0]
+];
+
 function initRotator() {
     rotatorStrip = document.getElementById('rotator');
     rcTL = document.getElementById('rot-cont-tl');
@@ -171,7 +172,7 @@ function initRot(rot) {
     rot.appendChild(center);
 
     let occupied = new Set();
-    occupied.add([1,1].join());
+    occupied.add([1, 1].join());
     let open = [];
     open.push({from: [1, 1], to: [1, 0]}); // T
     open.push({from: [1, 1], to: [2, 1]}); // R
@@ -234,3 +235,481 @@ function scrollRotator() {
 }
 
 //endregion rotator
+
+// region wordflop
+let wordflopStrip;
+let wfWords, wfPlaceholder;
+let wordCount = 0;
+let wordElems = [];
+let colByRow = [];
+const pathLength = 5;
+let wordPaths = [];
+let wordCycle = [
+    "WORD",
+    "WOOD",
+    "FOOD",
+    "FOOT",
+    "SOOT",
+    "SLOT",
+    "SLOP",
+    "FLOP",
+    "FLOW",
+    "FLEW",
+    "FLED",
+    "FEED",
+    "DEED",
+    "DYED",
+    "DYES",
+    "EYES",
+    "EVES",
+    "EVEN",
+    "OVEN",
+    "OWEN",
+    "OWED",
+    "AWED",
+    "APED",
+    "SPED",
+    "SEED",
+    "SEES",
+    "SEWS",
+    "MEWS",
+    "MESS",
+    "MESH",
+    "MECH",
+    "MUCH",
+    "MUSH",
+    "MUST",
+    "MAST",
+    "EAST",
+    "EASY",
+    "EASE",
+    "CASE",
+    "CARE",
+    "CARD",
+    "HARD",
+    "HARE",
+    "HIRE",
+    "SIRE",
+    "SITE",
+    "SINE",
+    "SANE",
+    "SAME",
+    "GAME",
+    "GALE",
+    "GALL",
+    "FALL",
+    "FELL",
+    "FELT",
+    "FEET",
+    "FRET",
+    "FREE",
+    "FLEE",
+    "FLEX",
+    "FLAX",
+    "FLAY",
+    "PLAY",
+    "CLAY",
+    "CLAD",
+    "GLAD",
+    "GOAD",
+    "GOOD",
+    "GOON",
+    "GOWN",
+    "DOWN",
+    "DAWN",
+    "LAWN",
+    "LAIN",
+    "LOIN",
+    "LOAN",
+    "LOAD",
+    "LEAD",
+    "LEND",
+    "FEND",
+    "FIND",
+    "FINS",
+    "PINS",
+    "PANS",
+    "PATS",
+    "PATH",
+    "MATH",
+    "MATE",
+    "MARE",
+    "FARE",
+    "FIRE",
+    "FIVE",
+    "FILE",
+    "FILL",
+    "SILL",
+    "SELL",
+    "SEAL",
+    "SEAR",
+    "STAR",
+    "SOAR",
+    "BOAR",
+    "BOAS",
+    "BIAS",
+    "BITS",
+    "BITE",
+    "RITE",
+    "RATE",
+    "RATS",
+    "RUTS",
+    "RUNS",
+    "RUNT",
+    "HUNT",
+    "HINT",
+    "PINT",
+    "PING",
+    "SING",
+    "SONG",
+    "SONS",
+    "SOBS",
+    "ROBS",
+    "RIBS",
+    "RIMS",
+    "AIMS",
+    "ALMS",
+    "ALPS",
+    "APPS",
+    "ASPS",
+    "ASKS",
+    "ARKS",
+    "IRKS",
+    "INKS",
+    "INNS",
+    "IONS",
+    "TONS",
+    "TANS",
+    "BANS",
+    "BAND",
+    "HAND",
+    "RAND",
+    "RAID",
+    "RAIL",
+    "FAIL",
+    "FOIL",
+    "FOUL",
+    "FOUR",
+    "POUR",
+    "POUT",
+    "PORT",
+    "PORE",
+    "LORE",
+    "LOVE",
+    "MOVE",
+    "MOLE",
+    "SOLE",
+    "SOLO",
+    "SILO",
+    "SILK",
+    "MILK",
+    "MILE",
+    "MALE",
+    "MADE",
+    "WADE",
+    "WADS",
+    "DADS",
+    "DUDS",
+    "DUES",
+    "HUES",
+    "SUES",
+    "SUNS",
+    "SUNK",
+    "SUCK",
+    "PUCK",
+    "PACK",
+    "PACT",
+    "PAST",
+    "PEST",
+    "TEST",
+    "TENT",
+    "TINT",
+    "TINE",
+    "TONE",
+    "CONE",
+    "CODE",
+    "BODE",
+    "BONE",
+    "BANE",
+    "BASE",
+    "BAKE",
+    "TAKE",
+    "TYKE",
+    "TYPE",
+    "TAPE",
+    "TAPS",
+    "TAGS",
+    "BAGS",
+    "BUGS",
+    "BOGS",
+    "BOWS",
+    "BOWL",
+    "BOIL",
+    "COIL",
+    "COIN",
+    "CORN",
+    "TOWN",
+    "TOWS",
+    "LOWS",
+    "LOGS",
+    "LOGO",
+    "POGO",
+    "POLO",
+    "POLE",
+    "PALE",
+    "PALL",
+    "PAIL",
+    "PAID",
+    "SAID",
+    "SKID",
+    "SKIN",
+    "SPIN",
+    "SHIN",
+    "THIN",
+    "THEN",
+    "TEEN",
+    "BEEN",
+    "BEES",
+    "FEES",
+    "FENS",
+    "FANS",
+    "FADS",
+    "FADE",
+    "FAME",
+    "LAME",
+    "LANE",
+    "LONE",
+    "LONG",
+    "LUNG",
+    "SUNG",
+    "SANG",
+    "RANG",
+    "RANT",
+    "RAFT",
+    "RIFT",
+    "LIFT",
+    "LIST",
+    "LAST",
+    "LASS",
+    "BASS",
+    "BARS",
+    "BARN",
+    "EARN",
+    "EARS",
+    "CARS",
+    "CART",
+    "PART",
+    "PARS",
+    "PASS",
+    "MASS",
+    "MOSS",
+    "MOST",
+    "COST",
+    "COAT",
+    "CHAT",
+    "CHAP",
+    "CHIP",
+    "SHIP",
+    "SLIP",
+    "SKIP",
+    "SKIM",
+    "SWIM",
+    "SWAM",
+    "SLAM",
+    "SEAM",
+    "SEAT",
+    "SENT",
+    "WENT",
+    "WEST",
+    "WEPT",
+    "KEPT",
+    "KELT",
+    "MELT",
+    "MALT",
+    "SALT",
+    "SALE",
+    "TALE",
+    "TALL",
+    "TELL",
+    "TEAL",
+    "TEAR",
+    "PEAR",
+    "PEER",
+    "PIER",
+    "TIER",
+    "TIED",
+    "TIES",
+    "TOES",
+    "DOES",
+    "DIES",
+    "DIET",
+    "DUET",
+    "DUEL",
+    "DUAL",
+    "DIAL",
+    "VIAL",
+    "VEAL",
+    "DEAL",
+    "REAL",
+    "REAM",
+    "TEAM",
+    "TRAM",
+    "CRAM",
+    "CLAM",
+    "FLAM",
+    "FOAM",
+    "FORM",
+    "WORM",
+    "WORE",
+    "WERE",
+    "HERE",
+    "HERB",
+    "VERB",
+    "VERY",
+    "VARY",
+    "WARY",
+    "WARP",
+    "TARP",
+    "TARS",
+    "TABS",
+    "LABS",
+    "LAPS",
+    "GAPS",
+    "GARS",
+    "WARS",
+    "WARD",
+    "LARD",
+    "LAID",
+    "LAIR",
+    "HAIR",
+    "HAIL",
+    "TAIL",
+    "TOIL",
+    "TOOL",
+    "COOL",
+    "COOP",
+    "CHOP",
+    "SHOP",
+    "SHOW",
+    "SLOW",
+    "SLOG",
+    "SLUG",
+    "SLUM",
+    "SLIM",
+    "SLIT",
+    "SPIT",
+    "SPAR",
+    "SPAS",
+    "SEAS",
+    "LEAS",
+    "LESS",
+    "LOSS",
+    "LOSE",
+    "ROSE",
+    "ROPE",
+    "COPE",
+    "CORE",
+    "CORD"
+];
+
+function initWordflop() {
+    wordflopStrip = document.getElementById("wordflop");
+    wfWords = document.getElementById("wf-words");
+    wfPlaceholder = document.getElementById("wf-placeholder");
+}
+
+function resizeWordflop() {
+    // clear existing words
+    for (let i = 0; i < wordElems.length; ++i) {
+        wordElems[i].remove();
+    }
+    wordElems = [];
+
+    let letterWidth = wfPlaceholder.clientWidth;
+    let letterHeight = wfPlaceholder.clientHeight;
+    let marginLeft = letterWidth;
+    let marginTop = letterHeight;
+    let playableWidth = wordflopStrip.clientWidth - marginLeft * 2;
+    let playableHeight = wordflopStrip.clientHeight - marginTop * 2;
+
+    // numCols * wordWidth + (numCols - 1) * minSpaceWidth = playableWidth
+    let wordWidth = letterWidth * 4;
+    let minSpaceWidth = letterWidth;
+    let numCols = (playableWidth + minSpaceWidth) / (wordWidth + minSpaceWidth);
+
+    // numRows * wordHeight + (numRows - 1) * minSpaceHeight = playableHeight
+    let wordHeight = letterHeight;
+    let minSpaceHeight = letterHeight / 4;
+    let numRows = (playableHeight + minSpaceHeight) / (wordHeight + minSpaceHeight);
+
+    let prevWC = wordCount;
+    wordCount = Math.floor(Math.min(numCols, numRows));
+    let diffWC = wordCount != prevWC;
+
+    // calculate spacing between columns and rows
+    let totalSpaceHoriz = playableWidth - (wordWidth * wordCount);
+    let spaceWidth = totalSpaceHoriz / (wordCount - 1);
+    let totalSpaceVert = playableHeight - (wordHeight * wordCount);
+    let spaceHeight = totalSpaceVert / (wordCount - 1);
+
+    // generate random positions in grid
+    if (diffWC) {
+        colByRow = [];
+        for (let i = 0; i < wordCount; ++i) {
+            colByRow.push(i);
+        }
+        shuffleArray(colByRow);
+    }
+
+    // generate word paths
+    if (diffWC) {
+        wordPaths = [];
+        let totalWords = wordCycle.length;
+        let pos = Math.floor(Math.random() * totalWords);
+        for (let i = 0; i < wordCount; ++i) {
+            let path = [];
+            for (let w = 0; w < pathLength; ++w) {
+                path.push(wordCycle[pos % totalWords]);
+                pos++;
+            }
+            pos--;
+            wordPaths.push(path);
+        }
+    }
+
+    // create and position word elements
+    for (let i = 0; i < wordCount; ++i) {
+        let elem = document.createElement("div");
+        elem.innerHTML = wordPaths[i][0];
+
+        let top = (wordHeight + spaceHeight) * i + marginTop;
+        elem.style.top = top + "px";
+        let left = (wordWidth + spaceWidth) * colByRow[i] + marginLeft;
+        elem.style.left = left + "px";
+
+        wfWords.appendChild(elem);
+        wordElems.push(elem);
+    }
+}
+
+function scrollWordflop() {
+    for (let i = 0; i < wordElems.length; ++i) {
+        let progress = scrollStagger(wordflopStrip, 0.1, 0.8, 0.3, wordCount, i);
+        let curIndex = Math.floor(progress * (pathLength - 1));
+        let prevIndex = Math.max(0, curIndex - 1);
+        let curWord = wordPaths[i][curIndex];
+        let prevWord = wordPaths[i][prevIndex];
+        let inner = "";
+        for (let c = 0; c < curWord.length; ++c) {
+            if (curWord[c] !== prevWord[c]) {
+                inner += "<span style='font-weight: 900; color: #000000'>" + curWord[c] + "</span>"
+            }
+            else {
+                inner += curWord[c];
+            }
+        }
+        wordElems[i].innerHTML = inner;
+    }
+}
+
+// endregion wordflop
