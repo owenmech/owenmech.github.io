@@ -4,6 +4,7 @@ window.onload = function () {
     initSpective();
     initRotator();
     initWordflop()
+    initCheckItOut();
 
     resizeGames();
 }
@@ -12,6 +13,7 @@ function resizeGames() {
     resizeSpective();
     resizeRotator();
     resizeWordflop();
+    resizeCheckItOut();
 
     scrollGames();
 }
@@ -22,6 +24,7 @@ function scrollGames() {
     scrollSpective();
     scrollRotator();
     scrollWordflop();
+    scrollCheckItOut();
 }
 
 document.addEventListener("scroll", scrollGames);
@@ -241,7 +244,7 @@ let wordflopStrip;
 let wfWords, wfPlaceholder;
 let wordCount = 0;
 let wordElems = [];
-let colByRow = [];
+let wfColByRow = [];
 const pathLength = 5;
 let wordPaths = [];
 let wordCycle = [
@@ -644,7 +647,7 @@ function resizeWordflop() {
 
     let prevWC = wordCount;
     wordCount = Math.floor(Math.min(numCols, numRows));
-    let diffWC = wordCount != prevWC;
+    let diffWC = wordCount !== prevWC;
 
     // calculate spacing between columns and rows
     let totalSpaceHoriz = playableWidth - (wordWidth * wordCount);
@@ -654,11 +657,11 @@ function resizeWordflop() {
 
     // generate random positions in grid
     if (diffWC) {
-        colByRow = [];
+        wfColByRow = [];
         for (let i = 0; i < wordCount; ++i) {
-            colByRow.push(i);
+            wfColByRow.push(i);
         }
-        shuffleArray(colByRow);
+        shuffleArray(wfColByRow);
     }
 
     // generate word paths
@@ -684,7 +687,7 @@ function resizeWordflop() {
 
         let top = (wordHeight + spaceHeight) * i + marginTop;
         elem.style.top = top + "px";
-        let left = (wordWidth + spaceWidth) * colByRow[i] + marginLeft;
+        let left = (wordWidth + spaceWidth) * wfColByRow[i] + marginLeft;
         elem.style.left = left + "px";
 
         wfWords.appendChild(elem);
@@ -703,8 +706,7 @@ function scrollWordflop() {
         for (let c = 0; c < curWord.length; ++c) {
             if (curWord[c] !== prevWord[c]) {
                 inner += "<span style='font-weight: 900; color: #000000'>" + curWord[c] + "</span>"
-            }
-            else {
+            } else {
                 inner += curWord[c];
             }
         }
@@ -713,3 +715,89 @@ function scrollWordflop() {
 }
 
 // endregion wordflop
+
+// region check-it-out
+let checkItOutStrip;
+let itemParent;
+let cioImgList = [
+    "../img/apple.png",
+    "../img/bottle.png",
+    "../img/box.png",
+    "../img/can.png",
+    "../img/carrot.png"
+];
+let cioColByRow = [0, 1, 2, 3, 4];
+let startRotations = [];
+let endRotations = [];
+const cioScaleFactor = 0.35;
+
+function initCheckItOut() {
+    checkItOutStrip = document.getElementById("check-it-out");
+    itemParent = document.getElementById("item-parent");
+    shuffleArray(cioImgList);
+    shuffleArray(cioColByRow);
+    startRotations = [];
+    endRotations = [];
+    for (let i = 0; i < cioImgList.length; ++i) {
+        startRotations.push(Math.random() * 90 - 45);
+        endRotations.push(Math.random() * 180 - 90);
+    }
+}
+
+function resizeCheckItOut() {
+    let horizMargin = 10;
+    let vertMargin = 10;
+    let playableWidth = checkItOutStrip.clientWidth - horizMargin * 2;
+    let playableHeight = checkItOutStrip.clientHeight - vertMargin * 2;
+    let minDim = Math.min(playableWidth, playableHeight);
+
+    let imgSize = minDim / 5;
+    let horizSpace = (playableWidth - minDim) / 4; // one of these will be 0
+    let vertSpace = (playableHeight - minDim) / 4; // if it was the smaller dimension
+
+    for (let i = 0; i < itemParent.children.length; ++i) {
+        let elem = itemParent.children[i];
+        elem.setAttribute("src", cioImgList[i]);
+        elem.style.width = imgSize + "px";
+        elem.style.height = imgSize + "px";
+        elem.style.top = (i * (imgSize + vertSpace) + vertMargin) + "px";
+        elem.style.left = (cioColByRow[i] * (imgSize + horizSpace) + horizMargin) + "px";
+        elem.style.transform = "rotate(" + startRotations[i] + "deg)";
+    }
+}
+
+function scrollCheckItOut() {
+    for (let i = 0; i < itemParent.children.length; ++i) {
+        let elem = itemParent.children[i];
+        let progress = scrollStagger(checkItOutStrip, 0.2, 0.75, 0.4, itemParent.children.length, i);
+        let rotation = (endRotations[i] - startRotations[i]) * progress + startRotations[i];
+        let scale = (1.25 - cioScaleFactor) * progress + cioScaleFactor;
+        elem.style.transform = "rotate(" + rotation + "deg) scale(" + scale + ")";
+    }
+}
+
+// endregion check-it-out
+
+// region wishy-washy
+let wishyWashyStrip;
+let buildingsParent;
+let buildingsBack;
+let buildingsFront;
+function initWishyWashy() {
+    wishyWashyStrip = document.getElementById("wishy-washy");
+    buildingsParent = document.getElementById("buildings-parent");
+    buildingsBack = document.getElementById("buildings-back");
+    buildingsFront = document.getElementById("buildings-front");
+}
+
+function resizeWishyWashy() {
+    let sideMargin = 100;
+    let bottomMargin = 100;
+
+    
+}
+
+function scrollWishyWashy() {
+
+}
+// endregion wishy-washy
