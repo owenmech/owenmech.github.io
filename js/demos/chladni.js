@@ -1,20 +1,24 @@
 let size;
 let grains = [];
-const maxSpeed = 10;
-const forceRange = 4;
-const maxForceOdds = 0.1;
-const minForceOdds = 0.02;
-const forceOddsRange = maxForceOdds - minForceOdds;
-const friction = 0.94;
 let bg;
 let chaosMap = [];
 let pattern = 0;
+const patternSize = 4;
+
+const maxSpeed = 10;
+const forceRange = 4;
+const maxForceOdds = 0.1;
+const minForceOdds = 0.04;
+const forceOddsRange = maxForceOdds - minForceOdds;
+const minFriction = 0.93;
+const maxFriction = 0.96;
+const frictionRange = maxFriction - minFriction;
 
 let recalcProgress = 0;
-const recalcSteps = 120;
+const recalcSteps = 240;
 let strengthProgress = 0;
-const strengthSteps = 60;
-const idleChaos = 0.3;
+const strengthSteps = 120;
+const idleChaos = 0.4;
 
 const grainCount = 2000;
 const batchCount = 100;
@@ -81,16 +85,17 @@ function draw() {
 
     // image(bg, 0, 0);
     background(42);
+
     let chaos;
+    let damp;
     let dV;
     let strengthen = false;
     let weight;
     let weightedIdle;
     let settle = false;
-    let damp = friction;
     if (recalcProgress < recalcSteps) {
         chaos = (recalcProgress / recalcSteps) * idleChaos;
-        damp = 0.96;
+        damp = maxFriction;
     } else if (strengthProgress < strengthSteps) {
         weight = (strengthProgress / strengthSteps);
         weightedIdle = (1 - weight) * idleChaos;
@@ -103,12 +108,14 @@ function draw() {
     // loadPixels();
     for (const grain of grains) {
         let speed = (Math.abs(grain.vX) + Math.abs(grain.vY)) / (maxSpeed * 2)
+        if (strengthen) {
+            chaos = weightedIdle + chaosMap[Math.round(grain.x)][Math.round(grain.y)] * weight;
+            damp = minFriction + chaos * frictionRange;
+        } else if (settle) {
+            chaos = chaosMap[Math.round(grain.x)][Math.round(grain.y)];
+            damp = minFriction + chaos * frictionRange;
+        }
         if (Math.random() < maxForceOdds - speed * forceOddsRange) {
-            if (strengthen) {
-                chaos = weightedIdle + chaosMap[Math.round(grain.x)][Math.round(grain.y)] * weight;
-            } else if (settle) {
-                chaos = chaosMap[Math.round(grain.x)][Math.round(grain.y)];
-            }
             dV = forceRange * chaos;
             grain.vY += Math.random() * 2 * dV - dV;
             grain.vX += Math.random() * 2 * dV - dV;
@@ -118,6 +125,7 @@ function draw() {
             if (grain.vY > maxSpeed) grain.vY = maxSpeed;
             else if (grain.vY < -maxSpeed) grain.vY = -maxSpeed;
         }
+
         grain.vX *= damp;
         grain.vY *= damp;
 
@@ -184,12 +192,12 @@ function recalculateChaosMap() {
 
 function localChaos(x, y) {
     let ij = indices[x][y];
-    let n = noise(ij.i / size * 8 + pattern, ij.j / size * 8);
-    let dist = Math.abs(n - 0.5) * 4;
-    let chaos = min(dist, 1);
-    if (chaos < 0.125) chaos /= 8;
-    chaos = max(chaos, 0.001)
-    return chaos;
+    let n = noise(ij.i / size * patternSize + pattern, ij.j / size * patternSize);
+    let chaos = Math.min(Math.abs(n - 0.4), Math.abs(n - 0.6)) * 8;
+    // let chaos = Math.abs(n - 0.5) * 4;
+    if (chaos < 0.01 * patternSize) chaos /= 8;
+    else chaos *= 1.2;
+    return min(max(chaos, 0.001), 1);
 
     // if (pattern % 2 === 0) return sin(ij.i / 20 + pattern) / 2 + 0.5;
     // else return sin(ij.j / 20 + pattern) / 2 + 0.5;
