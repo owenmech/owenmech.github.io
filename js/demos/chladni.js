@@ -128,11 +128,17 @@ function recalculateChaosMap() {
 
 function localChaos(x, y) {
     let ij = indices[x][y];
-    let n = noise(ij.i / size * 5 + pattern, ij.j / size * 5);
+    let n = noise(ij.i / size * 8 + pattern, ij.j / size * 8);
     let dist = Math.abs(n - 0.5);
     dist *= 7;
     return min(dist, 1);
 
     // if (pattern % 2 === 0) return sin(ij.i / 20 + pattern) / 2 + 0.5;
     // else return sin(ij.j / 20 + pattern) / 2 + 0.5;
+}
+
+function keyPressed() {
+    if (keyCode === DOWN_ARROW) {
+        saveCanvas("chladni", "png");
+    }
 }
