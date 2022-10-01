@@ -6,6 +6,11 @@ let bg;
 let chaosMap = [];
 let pattern = 0;
 
+let recalcProgress = 0;
+let recalcSteps = 60;
+let strengthProgress = 0;
+let strengthSteps = 120;
+
 let indices = [];
 
 function setup() {
@@ -44,17 +49,43 @@ function setup() {
         grains.push({x: Math.random() * (size - 1), y: Math.random() * (size - 1), vX: 0, vY: 0});
     }
 
+    chaosMap = [];
+    for (let i = 0; i < size; i++) {
+        chaosMap.push([]);
+        for (let j = 0; j < size; j++) {
+            chaosMap[i].push(1);
+        }
+    }
+
     bg = createImage(size, size);
-    recalculateChaosMap();
+
+    recalcProgress = 0;
 }
 
 function draw() {
+    if (recalcProgress < recalcSteps)
+    {
+        recalculateChaosMap();
+    }
+    else if (strengthProgress < strengthSteps)
+    {
+        strengthProgress++;
+    }
+
     // image(bg, 0, 0);
     background(42);
 
     // loadPixels();
     for (const grain of grains) {
-        let chaos = chaosMap[Math.round(grain.x)][Math.round(grain.y)];
+        let chaos;
+        if (recalcProgress < recalcSteps)
+        {
+            chaos = (recalcProgress / recalcSteps) * 0.5 + 0.5;
+        }
+        else
+        {
+            chaos = chaosMap[Math.round(grain.x)][Math.round(grain.y)];
+        }
         let dV = forceRange * chaos;
         let damp = 0.85;
         grain.vY += Math.random() * 2 * dV - dV;
@@ -100,30 +131,28 @@ function draw() {
 
 function mouseClicked() {
     pattern++;
-    recalculateChaosMap();
+    recalcProgress = 0;
 }
 
 function recalculateChaosMap() {
-    chaosMap = [];
+    // bg.loadPixels();
     for (let i = 0; i < size; i++) {
-        chaosMap.push([]);
-        for (let j = 0; j < size; j++) {
-            chaosMap[i].push(localChaos(i, j));
+        for (let j = recalcProgress; j < size; j += recalcSteps) {
+            chaosMap[i][j] = localChaos(i, j);
+            // let val = chaosMap[i][j] * 255;
+            // let index = (i + j * width) * 4;
+            // bg.pixels[index + 0] = val;
+            // bg.pixels[index + 1] = val;
+            // bg.pixels[index + 2] = val;
+            // bg.pixels[index + 3] = 255;
         }
     }
-
-    bg.loadPixels();
-    for (let x = 0; x < size; x++) {
-        for (let y = 0; y < size; y++) {
-            let val = chaosMap[x][y] * 255;
-            let index = (x + y * width) * 4;
-            bg.pixels[index + 0] = val;
-            bg.pixels[index + 1] = val;
-            bg.pixels[index + 2] = val;
-            bg.pixels[index + 3] = 255;
-        }
+    // bg.updatePixels();
+    recalcProgress++;
+    if (recalcProgress === recalcSteps)
+    {
+        strengthProgress = 0;
     }
-    bg.updatePixels();
 }
 
 function localChaos(x, y) {
