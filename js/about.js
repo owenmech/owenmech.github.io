@@ -33,7 +33,7 @@ let capRots = [];
 const maxCapRot = 180;
 const minCapRot = 360;
 
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', (event) => {
     initAbout();
 
     initBio();
@@ -41,7 +41,7 @@ window.onload = function () {
     initUsc();
 
     resizeAbout();
-}
+});
 
 function resizeAbout() {
     resizeBio();

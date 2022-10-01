@@ -1,14 +1,14 @@
 let box1, box2, box3, box4;
 let ind = 0;
 
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', (event) => {
     self.setInterval(updateProjects, 150);
     box1 = document.getElementById('logo-1');
     box2 = document.getElementById('logo-2');
     box3 = document.getElementById('logo-3');
     box4 = document.getElementById('logo-4');
     refreshSize();
-}
+});
 
 document.addEventListener("scroll", refreshSize);
 

@@ -4,7 +4,7 @@ let vol2 = {current: 0, target: 1};
 let vol3 = {current: 0, target: 1};
 let vol4 = {current: 0, target: 1};
 
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', (event) => {
     self.setInterval(updateMusic, 100);
     self.setInterval(updateBigBar, 50);
     bar1 = document.getElementById('logo-1');
@@ -21,7 +21,7 @@ window.onload = function() {
     // applyColors(bar2, 75, 245);
     // applyColors(bar3, 255, 300);
     // applyColors(bar4, 310, 380);
-}
+});
 
 function updateMusic() {
     updateBar(bar1, vol1);

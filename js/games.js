@@ -1,4 +1,4 @@
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', (event) => {
     initGames();
 
     initSpective();
@@ -7,7 +7,7 @@ window.onload = function () {
     initCheckItOut();
 
     resizeGames();
-}
+});
 
 function resizeGames() {
     resizeSpective();
