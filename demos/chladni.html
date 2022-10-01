@@ -5,8 +5,33 @@
     <title>c h l a d n i</title>
     <script src="../js/p5.js"></script>
     <script src="../js/demos/chladni.js"></script>
+    <link rel="stylesheet" href="../css/main.css">
 </head>
-<body style="background-color: black">
-
+<body>
+<div id="chladni-wrapper" style="display: block"></div>
+<div id="options-wrapper" style="display: block">
+    <h3>Click the plate to change the wave pattern.</h3>
+    <h3>Press up arrow to increase the number of sand grains.</h3>
+    <h3>Press down arrow to decrease the number of sand grains.</h3>
+    <div id="button-row">
+        <button onclick="changePattern()">Change Pattern</button>
+        <button onclick="increaseGrains()">Increase Grains</button>
+        <button onclick="decreaseGrains()">Decrease Grains</button>
+    </div>
+</div>
 </body>
+<style>
+    body {
+        background-color: black;
+        display: flex;
+        flex-wrap: wrap;
+        overflow-x: hidden;
+        align-items: center;
+    }
+
+    canvas, #options-wrapper {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+</style>
 </html>

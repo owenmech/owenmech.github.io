@@ -11,12 +11,16 @@ let recalcSteps = 60;
 let strengthProgress = 0;
 let strengthSteps = 120;
 
+let grainCount = 2000;
+let batchCount = 100;
+
 let indices = [];
 
 function setup() {
     size = Math.min(windowWidth, windowHeight) - 20;
     let cnv = createCanvas(size, size);
-    cnv.position(10, 10);
+    cnv.parent("chladni-wrapper")
+    // cnv.position(10, 10);
     pixelDensity(1);
     background(42);
 
@@ -45,7 +49,7 @@ function setup() {
     }
 
     grains = [];
-    for (let i = 0; i < 2000; i++) {
+    for (let i = 0; i < grainCount; i++) {
         grains.push({x: Math.random() * (size - 1), y: Math.random() * (size - 1), vX: 0, vY: 0});
     }
 
@@ -80,7 +84,7 @@ function draw() {
         let chaos;
         if (recalcProgress < recalcSteps)
         {
-            chaos = (recalcProgress / recalcSteps) * 0.5 + 0.5;
+            chaos = (recalcProgress / recalcSteps) * 0.8 + 0.2;
         }
         else
         {
@@ -130,6 +134,12 @@ function draw() {
 }
 
 function mouseClicked() {
+    if (mouseX < 0 || mouseX >= size || mouseY < 0 || mouseY >= size) return;
+    changePattern();
+}
+
+function changePattern()
+{
     pattern++;
     recalcProgress = 0;
 }
@@ -167,7 +177,25 @@ function localChaos(x, y) {
 }
 
 function keyPressed() {
-    if (keyCode === DOWN_ARROW) {
-        saveCanvas("chladni", "png");
+    if (keyCode === UP_ARROW)
+    {
+        increaseGrains()
+    }
+    else if (keyCode === DOWN_ARROW && grains.length > batchCount) {
+        decreaseGrains()
+    }
+}
+
+function increaseGrains()
+{
+    for (let i = 0; i < batchCount; i++) {
+        grains.push({x: Math.random() * (size - 1), y: Math.random() * (size - 1), vX: 0, vY: 0});
+    }
+}
+
+function decreaseGrains()
+{
+    for (let i = 0; i < batchCount; i++) {
+        grains.pop();
     }
 }
