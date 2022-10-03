@@ -17,7 +17,7 @@ const frictionRange = maxFriction - minFriction;
 let recalcProgress = 0;
 const recalcSteps = 240;
 let strengthProgress = 0;
-const strengthSteps = 120;
+const strengthSteps = 60;
 const idleChaos = 0.4;
 
 const grainCount = 2000;
@@ -31,6 +31,7 @@ function setup() {
     cnv.parent("chladni-wrapper")
     // cnv.position(10, 10);
     pixelDensity(1);
+    colorMode(HSB);
     background(42);
     noStroke();
 
@@ -60,7 +61,7 @@ function setup() {
 
     grains = [];
     for (let i = 0; i < grainCount; i++) {
-        grains.push({x: Math.random() * (size - 1), y: Math.random() * (size - 1), vX: 0, vY: 0});
+        addGrain();
     }
 
     chaosMap = [];
@@ -84,7 +85,7 @@ function draw() {
     }
 
     // image(bg, 0, 0);
-    background(42);
+    background(0, 0, 19);
 
     let chaos;
     let damp;
@@ -107,7 +108,7 @@ function draw() {
 
     // loadPixels();
     for (const grain of grains) {
-        let speed = (Math.abs(grain.vX) + Math.abs(grain.vY)) / (maxSpeed * 2)
+        let speed = (Math.abs(grain.vX) + Math.abs(grain.vY)) / (maxSpeed * 2.0)
         if (strengthen) {
             chaos = weightedIdle + chaosMap[Math.round(grain.x)][Math.round(grain.y)] * weight;
             damp = minFriction + chaos * frictionRange;
@@ -154,8 +155,9 @@ function draw() {
         // pixels[pix + 2] = 0;
         // pixels[pix + 3] = 255;
 
-        fill(255, 200, 0, 255);
-        circle(grain.x, grain.y, 3 + speed * 2);
+        fill(grain.h, grain.s, grain.b, 1);
+
+        circle(grain.x, grain.y, size / 200);
     }
     // updatePixels();
 }
@@ -208,13 +210,29 @@ function keyPressed() {
         increaseGrains()
     } else if (keyCode === DOWN_ARROW) {
         decreaseGrains()
+    } else if (keyCode === RIGHT_ARROW) {
+        changePattern()
+    } else if (keyCode === TAB) {
+        saveCanvas("chladni-" + pattern, "png");
     }
 }
 
 function increaseGrains() {
     for (let i = 0; i < batchCount; i++) {
-        grains.push({x: Math.random() * (size - 1), y: Math.random() * (size - 1), vX: 0, vY: 0});
+        addGrain();
     }
+}
+
+function addGrain() {
+    grains.push({
+        x: Math.random() * (size - 1),
+        y: Math.random() * (size - 1),
+        vX: 0,
+        vY: 0,
+        h: Math.random() * 20 + 30,
+        s: Math.random() * 50 + 50,
+        b: Math.random() * 40 + 60,
+    });
 }
 
 function decreaseGrains() {

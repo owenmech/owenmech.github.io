@@ -44,11 +44,11 @@
 }
 /* endregion snowflakes */
 
-/* region metro */
-#metro {
-    background-image: linear-gradient(45deg, #8b3030, #cd9017);
+/* region chladni */
+#chladni {
+    background-image: linear-gradient(45deg, #53463d, #b8863c);
 }
-/* endregion metro */
+/* endregion chladni */
 
 /* region kaleidoscope */
 #kaleidoscope {
@@ -56,11 +56,11 @@
 }
 /* endregion kaleidoscope */
 
-/* region kaleidoscope */
-#chladni {
-    background-image: linear-gradient(45deg, #53463d, #b8953c);
+/* region metro */
+#metro {
+    background-image: linear-gradient(45deg, #8b3030, #cd9017);
 }
-/* endregion kaleidoscope */
+/* endregion metro */
 
 /* region website */
 #website {
